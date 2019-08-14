@@ -82,14 +82,14 @@ class Dhl_MeinPaketCommon_Model_Xml_Response_DataResponse extends Dhl_MeinPaketC
 			$transaction->beginTransaction ();
 			/* @var $bestPrice Dhl_MeinPaketCommon_Model_Xml_Response_Partial_DataResponse_BestPrice */
 			
+			$collection = Mage::getModel ( 'meinpaket/bestPrice' )->getCollection ();
+			foreach ( $collection->getItems () as $price ) {
+				$price->delete ();
+			}
+			
 			foreach ( $this->bestPrices as $bestPrice ) {
 				if (count ( $bestPrice->getCommonErrors () )) {
 					continue;
-				}
-				
-				$collection = Mage::getModel ( 'meinpaket/bestPrice' )->getCollection ();
-				foreach ( $collection->getItems () as $price ) {
-					$price->delete ();
 				}
 				
 				/* @var $bestPriceModel Dhl_MeinPaketCommon_Model_BestPrice */

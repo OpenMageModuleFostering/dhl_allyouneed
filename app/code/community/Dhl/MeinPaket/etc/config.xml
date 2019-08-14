@@ -63,9 +63,8 @@
 				<default_delivery_time>5</default_delivery_time>
 			</product_attributes>
 			<cron>
-				<product>0 * * * *</product>
-				<order>*/15 * * * *</order>
-				<bestprice>15 3 * * *</bestprice>
+				<product>*/15 * * * *</product>
+				<bestprice>0 */4 * * *</bestprice>
 			</cron>
 			<advanced>
 				<cycle_product_count>100</cycle_product_count>

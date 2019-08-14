@@ -10,7 +10,21 @@ class Dhl_MeinPaket_Block_Adminhtml_BestPrice_Grid extends Mage_Adminhtml_Block_
 	}
 	protected function _prepareCollection() {
 		$collection = Mage::getModel ( 'meinpaket/bestPrice' )->getCollection ();
+		
+		$entityTypeId = Mage::getModel ( 'eav/entity' )->setType ( 'catalog_product' )->getTypeId ();
+		$prodNameAttrId = Mage::getModel ( 'eav/entity_attribute' )->loadByCode ( $entityTypeId, 'name' )->getAttributeId ();
+		$collection->getSelect ()->joinLeft ( array (
+				'prod_name' => 'catalog_product_entity' 
+		), 'prod_name.entity_id = main_table.product_id', array (
+				'sku' 
+		) )->joinLeft ( array (
+				'cpev_name' => 'catalog_product_entity_varchar' 
+		), 'cpev_name.entity_id=prod_name.entity_id AND cpev_name.attribute_id=' . $prodNameAttrId . '', array (
+				'name' => 'cpev_name.value' 
+		) );
+		
 		$this->setCollection ( $collection );
+		
 		return parent::_prepareCollection ();
 	}
 	protected function _prepareColumns() {
@@ -18,6 +32,22 @@ class Dhl_MeinPaket_Block_Adminhtml_BestPrice_Grid extends Mage_Adminhtml_Block_
 				'header' => Mage::helper ( 'meinpaket' )->__ ( 'ID' ),
 				'type' => 'number',
 				'index' => 'bestprice_id' 
+		) );
+		
+		$this->addColumn ( 'product_id', array (
+				'header' => Mage::helper ( 'meinpaket' )->__ ( 'Product ID' ),
+				'type' => 'number',
+				'index' => 'product_id' 
+		) );
+		
+		$this->addColumn ( 'sku', array (
+				'header' => Mage::helper ( 'meinpaket' )->__ ( 'Sku' ),
+				'index' => 'sku' 
+		) );
+		
+		$this->addColumn ( 'name', array (
+				'header' => Mage::helper ( 'meinpaket' )->__ ( 'Name' ),
+				'index' => 'name' 
 		) );
 		
 		$this->addColumn ( 'price', array (
@@ -67,7 +97,7 @@ class Dhl_MeinPaket_Block_Adminhtml_BestPrice_Grid extends Mage_Adminhtml_Block_
 		$this->addColumn ( 'created_at', array (
 				'header' => Mage::helper ( 'meinpaket' )->__ ( 'Created At' ),
 				'type' => 'datetime',
-				'index' => 'created_at'
+				'index' => 'created_at' 
 		) );
 		
 		$this->addExportType ( '*/*/exportExcel', Mage::helper ( 'meinpaket' )->__ ( 'Excel XML' ) );
@@ -85,4 +115,4 @@ class Dhl_MeinPaket_Block_Adminhtml_BestPrice_Grid extends Mage_Adminhtml_Block_
 				'_current' => true 
 		) );
 	}
-	}
+}
