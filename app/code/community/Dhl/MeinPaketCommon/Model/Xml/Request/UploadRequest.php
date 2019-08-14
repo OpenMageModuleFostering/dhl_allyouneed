@@ -244,8 +244,8 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 				$configurableProduct = Mage::getModel ( 'catalog/product' )->load ( $parentIdArray [0] );
 			}
 		}
-		
-		if (! $product->getData ( 'sync_with_dhl_mein_paket' ) && $configurableProduct == null) {
+
+		if (! $this->productHelper->isActive($product) && $configurableProduct == null) {
 			$this->removeProduct ( $product );
 			return false;
 		}
@@ -397,16 +397,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 	 * @param Mage_Catalog_Model_Product $product        	
 	 */
 	protected function handleConfigurableProduct(Mage_Catalog_Model_Product $product) {
-		if (! $product->getData ( 'sync_with_dhl_mein_paket' )) {
-			/* @var $productDescription DOMNode */
-			$productDeletion = $this->getDocument ()->createElement ( 'productDeletion' );
-			$this->getDeletions ()->appendChild ( $productDeletion );
-			$pId = $this->getDocument ()->createElement ( 'common:productId', $product->getId () );
-			$productDeletion->appendChild ( $pId );
-			return false;
-		}
-		
-		if (! $product->getData ( 'sync_with_dhl_mein_paket' )) {
+		if (! $this->productHelper->isActive($product)) {
 			$this->removeProduct ( $product );
 			return false;
 		}

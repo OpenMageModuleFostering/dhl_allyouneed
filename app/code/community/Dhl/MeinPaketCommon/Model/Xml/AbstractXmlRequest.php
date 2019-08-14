@@ -63,8 +63,8 @@ abstract class Dhl_MeinPaketCommon_Model_Xml_AbstractXmlRequest extends Dhl_Mein
 		$languageNode = $this->getDocument ()->createElement ( 'common:language', 'de' );
 		$multiplierIdNode = $this->getDocument ()->createElement ( 'common:multiplierId', 'MAGENTO' );
 		
-		$usernameNode->appendChild ( $this->getDocument ()->createTextNode ( $username ) );
-		$passwordNode->appendChild ( $this->getDocument ()->createTextNode ( $password ) );
+		$usernameNode->appendChild ( $this->getDocument ()->createCDATASection ( $username ) );
+		$passwordNode->appendChild ( $this->getDocument ()->createCDATASection ( $password ) );
 		
 		$headerNode->appendChild ( $usernameNode );
 		$headerNode->appendChild ( $passwordNode );

@@ -7,8 +7,6 @@
 $installer = $this;
 $installer->startSetup ();
 
-$installer->installEntities ();
-
 $installer->run ( "
 		DROP TABLE IF EXISTS {$this->getTable('postpay/cart')};
 		CREATE TABLE {$this->getTable('postpay/cart')} (

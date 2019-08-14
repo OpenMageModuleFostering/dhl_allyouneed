@@ -14,7 +14,7 @@ class Dhl_MeinPaketCommon_Model_Client_XmlOverHttp extends Varien_Object {
 	 *
 	 * @var string
 	 */
-	const PRODUCTIVE_ENDPOINT = 'de.allyouneed.com/dealerapi/';
+	const PRODUCTIVE_ENDPOINT = 'de.allyouneed.com/dealerapi/xml';
 	/**
 	 * Endpoint for sandbox
 	 *
@@ -49,7 +49,8 @@ class Dhl_MeinPaketCommon_Model_Client_XmlOverHttp extends Varien_Object {
 	 */
 	public function __construct() {
 		$this->config = array (
-				'useragent' => 'Magento ' . Mage::getVersion () . ' Extension ' . Mage::helper ( 'meinpaket/data' )->getExtensionVersion () 
+				'useragent' => 'Magento ' . Mage::getVersion () . ' Extension ' . Mage::helper ( 'meinpaket/data' )->getExtensionVersion (),
+				'timeout' => 30 
 		);
 		$scheme = Mage::getStoreConfigFlag ( 'meinpaket/endpoint/https' ) ? 'https://' : 'http://';
 		$path = Mage::getStoreConfigFlag ( 'meinpaket/endpoint/sandbox' ) ? self::SANDBOX_ENDPOINT : self::PRODUCTIVE_ENDPOINT;

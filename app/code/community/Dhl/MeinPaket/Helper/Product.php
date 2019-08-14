@@ -34,6 +34,16 @@ class Dhl_MeinPaket_Helper_Product extends Mage_Core_Helper_Abstract {
 	}
 	
 	/**
+	 * Return true if the product should be listed.
+	 * 
+	 * @param Mage_Catalog_Model_Product $product to be checked
+	 * @return boolean true if the product should be listed
+	 */
+	public function isActive(Mage_Catalog_Model_Product $product) {
+		return $product->getData ( 'sync_with_dhl_mein_paket' ) > 0;
+	}
+	
+	/**
 	 * Tells if the given product has a valid ean.
 	 *
 	 * @param Mage_Catalog_Model_Product $product        	

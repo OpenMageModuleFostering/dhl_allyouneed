@@ -4,8 +4,6 @@
 $installer = $this;
 $installer->startSetup ();
 
-$installer->installEntities ();
-
 $installer->run ( "
 DROP TABLE IF EXISTS {$this->getTable('meinpaket/category')};
 CREATE TABLE {$this->getTable('meinpaket/category')} (

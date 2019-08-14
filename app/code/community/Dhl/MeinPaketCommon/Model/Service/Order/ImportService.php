@@ -34,14 +34,7 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 	 *
 	 * @var string
 	 */
-	const IMPORT_SHIPPING_METHOD = 'meinpaket_standard';
-
-	/**
-	 *
-	 * @var string
-	 */
 	const IMPORT_SHIPPING_METHOD = 'allyouneed_standard';
-	
 	
 	/**
 	 *

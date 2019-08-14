@@ -75,10 +75,6 @@ if (! $orderIdFieldExists) {
 	$installer->getConnection ()->addColumn ( $installer->getTable ( 'sales_flat_shipment' ), 'shipment_was_exported_for_dhl_mein_paket', 'int(1) NULL DEFAULT NULL AFTER `entity_id`' );
 }
 
-Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( 'DHL Allyouneed extension was successfully installed!' );
-
-$installer->installEntities ();
-
 $installer->run ( "
 		DROP TABLE IF EXISTS {$this->getTable('meinpaketcommon/async')};
 		CREATE TABLE {$this->getTable('meinpaketcommon/async')} (
