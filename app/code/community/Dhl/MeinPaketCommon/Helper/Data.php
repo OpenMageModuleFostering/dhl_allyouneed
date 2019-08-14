@@ -52,27 +52,27 @@ class Dhl_MeinPaketCommon_Helper_Data extends Mage_Core_Helper_Abstract {
 	}
 	
 	/**
-	 * Get filtered quote from session.
+	 * Check for usable items.
 	 *
 	 * @return boolean
 	 */
-	public function checkItem(Mage_Sales_Model_Order_Item $item) {
-		$options = Mage::helper ( 'catalog/product_configuration' )->getCustomOptions ( $item );
-		// $options = $item->getProduct ()->getTypeInstance ( true )->getOrderOptions ( $item->getProduct () );
-		
-		if (count ( $options ) || $item->getIsNominal () || $item->getIsVirtual () || $item->getIsRecurring ()) {
-			return false;
+	public function checkItem(Mage_Core_Model_Abstract $item) {
+		return (! ($item instanceof Mage_Catalog_Model_Product_Configuration_Item_Interface) || count ( Mage::helper ( 'catalog/product_configuration' )->getCustomOptions ( $item ) ) <= 0) && ! $item->getIsNominal () && ! $item->getIsVirtual () && ! $item->getIsRecurring ();
+	}
+	
+	/**
+	 * Calculate price without tax
+	 * 
+	 * @param float $price
+	 *        	with tax
+	 * @param float $tax
+	 *        	tax amount. If $tax > 1 $tax is assumed to be in percent.
+	 */
+	public function priceWithoutTax($price, $tax) {
+		if ($tax > 1) {
+			$tax = $tax / 100;
 		}
-		// Mage::log ( Zend_Debug::dump ( $options ) );
 		
-		if ($item->getParentItemId ()) {
-			true;
-		}
-		
-		if ($item->getProduct ()->isVirtual () || $item->getProduct ()->isRecurring ()) {
-			return false;
-		}
-		
-		return true;
+		return $price / (1 + $tax);
 	}
 }

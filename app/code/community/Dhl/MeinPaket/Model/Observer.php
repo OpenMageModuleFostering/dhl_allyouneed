@@ -34,7 +34,7 @@ class Dhl_MeinPaket_Model_Observer {
 	 */
 	public function catalogProductDeleteBefore(Varien_Event_Observer $observer) {
 		try {
-			$product = Mage::getModel ( 'catalog/product' )->load ( $observer->getData ( 'product' )->getId () );
+			$product = Mage::getModel ( 'catalog/product' )->setStoreId ( Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStoreId () )->load ( $observer->getData ( 'product' )->getId () );
 			if ($product->hasData ( 'was_exported_for_dhl_mein_paket' ) && (( boolean ) $product->getData ( 'product_was_exported_for_dhl' )) === true) {
 				$product->setStatus ( Mage_Catalog_Model_Product_Status::STATUS_DISABLED )->save ();
 			}
@@ -142,14 +142,13 @@ class Dhl_MeinPaket_Model_Observer {
 		}
 		return $this;
 	}
-	
 	public function catalogInventoryStockItemSaveAfter() {
-		//TODO:
+		// TODO:
 	}
 	
 	/**
-	 * 
-	 * @param unknown $observer
+	 *
+	 * @param unknown $observer        	
 	 */
 	public function addMeinPaketAttributes($observer) {
 		$fieldset = $observer->getForm ()->getElement ( 'base_fieldset' );

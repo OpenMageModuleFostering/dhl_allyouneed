@@ -5,6 +5,15 @@
  */
 class Dhl_MeinPaket_Adminhtml_MatchingController extends Mage_Adminhtml_Controller_Action {
 	/**
+	 * (non-PHPdoc)
+	 * 
+	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
+	 */
+	protected function _isAllowed() {
+		return Mage::getSingleton ( 'admin/session' )->isAllowed ( 'admin/meinpaket/matching' );
+	}
+	
+	/**
 	 * Get custom products grid and serializer block
 	 */
 	public function indexAction() {

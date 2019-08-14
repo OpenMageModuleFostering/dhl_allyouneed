@@ -67,6 +67,6 @@ class Dhl_MeinPaket_Block_Adminhtml_ProductExport_Export extends Mage_Adminhtml_
 	 * @return string
 	 */
 	protected function getErrorDescription($errorType, $errorCode = '') {
-		return Mage::helper ( 'meinpaket/product' )->getErrorDescription ( $errorType, $errorCode );
+		return Mage::helper ( 'meinpaketcommon/product' )->getErrorDescription ( $errorType, $errorCode );
 	}
 }

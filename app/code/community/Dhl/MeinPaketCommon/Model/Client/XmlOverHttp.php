@@ -95,6 +95,7 @@ class Dhl_MeinPaketCommon_Model_Client_XmlOverHttp extends Varien_Object {
 		
 		/* @var $log Dhl_MeinPaketCommon_Model_Log */
 		$log = Mage::getModel ( 'meinpaketcommon/log' );
+		$log->setUrl ( $url );
 		$log->setSend ( $xmlData );
 		$log->setCreatedAt ( Varien_Date::now () );
 		if ($xml instanceof Dhl_MeinPaketCommon_Model_Xml_Request_AsynchronousStatusRequest) {

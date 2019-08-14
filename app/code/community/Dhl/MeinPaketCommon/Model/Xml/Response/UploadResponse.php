@@ -53,7 +53,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Response_UploadResponse extends Dhl_MeinPake
 	public function storeMeinPaketIds() {
 		foreach ( $this->productDescriptionConfirmations as $conf ) {
 			/* @var $product Mage_Catalog_Model_Product */
-			$product = Mage::getModel ( 'catalog/product' )->load ( $conf->getProductId () );
+			$product = Mage::getModel ( 'catalog/product' )->setStoreId ( Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStoreId () )->load ( $conf->getProductId () );
 			if ($product->getData ( 'meinpaket_id' ) != $conf->getMeinPaketId ()) {
 				$product->setData ( 'meinpaket_id', $conf->getMeinPaketId () );
 				$product->getResource ()->saveAttribute ( $product, 'meinpaket_id' );
@@ -62,7 +62,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Response_UploadResponse extends Dhl_MeinPake
 		
 		foreach ( $this->productDeletionConfirmations as $conf ) {
 			/* @var $product Mage_Catalog_Model_Product */
-			$product = Mage::getModel ( 'catalog/product' )->load ( $conf->getProductId () );
+			$product = Mage::getModel ( 'catalog/product' )->setStoreId ( Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStoreId () )->load ( $conf->getProductId () );
 			if ($product->getData ( 'meinpaket_id' ) != $conf->getMeinPaketId ()) {
 				$product->setData ( 'meinpaket_id', $conf->getMeinPaketId () );
 				$product->getResource ()->saveAttribute ( $product, 'meinpaket_id' );
@@ -76,7 +76,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Response_UploadResponse extends Dhl_MeinPake
 		/* @var $conf Dhl_MeinPaketCommon_Model_Xml_Response_Partial_ProductId */
 		foreach ( $this->productDeletionConfirmations as $conf ) {
 			/* @var $product Mage_Catalog_Model_Product */
-			$product = Mage::getModel ( 'catalog/product' )->load ( $conf->getProductId () );
+			$product = Mage::getModel ( 'catalog/product' )->setStoreId ( Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStoreId () )->load ( $conf->getProductId () );
 			$product->setData ( 'meinpaket_id', null );
 			$product->getResource ()->saveAttribute ( $product, 'meinpaket_id' );
 		}

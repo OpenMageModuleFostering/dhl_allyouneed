@@ -21,6 +21,14 @@ class Dhl_MeinPaketCommon_Adminhtml_OrderImportController extends Mage_Adminhtml
 	}
 	
 	/**
+	 * (non-PHPdoc)
+	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
+	 */
+	protected function _isAllowed() {
+		return Mage::getSingleton ( 'admin/session' )->isAllowed ( 'admin/meinpaket/order_import' );
+	}
+	
+	/**
 	 * Default controller action.
 	 *
 	 * @return void

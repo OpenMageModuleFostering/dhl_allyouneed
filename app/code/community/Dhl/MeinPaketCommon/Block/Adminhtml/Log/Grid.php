@@ -24,6 +24,11 @@ class Dhl_MeinPaketCommon_Block_Adminhtml_Log_Grid extends Mage_Adminhtml_Block_
 				'header' => Mage::helper ( 'meinpaketcommon' )->__ ( 'Request ID' ),
 				'index' => 'request_id' 
 		) );
+
+		$this->addColumn ( 'url', array (
+				'header' => Mage::helper ( 'meinpaketcommon' )->__ ( 'URL' ),
+				'index' => 'url'
+		) );
 		
 		$this->addColumn ( 'send', array (
 				'header' => Mage::helper ( 'meinpaketcommon' )->__ ( 'Send' ),

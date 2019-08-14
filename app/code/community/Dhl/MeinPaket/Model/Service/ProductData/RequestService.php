@@ -57,7 +57,7 @@ class Dhl_MeinPaket_Model_Service_ProductData_RequestService {
 		
 		try {
 			/* @var $collection Mage_Catalog_Model_Resource_Product_Collection */
-			$collection = Mage::getModel ( 'catalog/product' )->getCollection ();
+			$collection = Mage::getModel ( 'catalog/product' )->getCollection ()->addStoreFilter ( Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStoreId () );
 			
 			$collection->addAttributeToFilter ( 'meinpaket_id', array (
 					'neq' => '' 

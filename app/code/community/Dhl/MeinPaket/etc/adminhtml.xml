@@ -4,27 +4,27 @@
 		<meinpaket>
 			<title>Allyouneed / Postpay</title>
 			<children>
-				<meinpaket_backlog translate="title" module="meinpaket">
+				<backlog translate="title" module="meinpaket">
 					<title>Synchronisation</title>
 					<action>meinpaket/adminhtml_backlog_product</action>
 					<depends>
 						<config>meinpaket/credentials/active</config>
 					</depends>
-				</meinpaket_backlog>
-				<meinpaket_categoryimport translate="title" module="meinpaket">
+				</backlog>
+				<category_import translate="title" module="meinpaket">
 					<title>import categories</title>
 					<action>meinpaket/adminhtml_categoryImport</action>
 					<depends>
 						<config>meinpaket/credentials/active</config>
 					</depends>
-				</meinpaket_categoryimport>
-				<meinpaket_bestprice translate="title" module="meinpaket">
+				</category_import>
+				<bestprice translate="title" module="meinpaket">
 					<title>best prices</title>
 					<action>meinpaket/adminhtml_bestPrice</action>
 					<depends>
 						<config>meinpaket/credentials/active</config>
 					</depends>
-				</meinpaket_bestprice>
+				</bestprice>
 			</children>
 			<sort_order>90</sort_order>
 			<class>meinpaket</class>
@@ -34,6 +34,31 @@
 		<resources>
 			<admin>
 				<children>
+					<meinpaket translate="title">
+						<title>Allyouneed</title>
+						<children>
+							<backlog translate="title">
+								<title>Backlog</title>
+								<sort_order>50</sort_order>
+							</backlog>
+							<bestprice translate="title">
+								<title>Bestprice</title>
+								<sort_order>51</sort_order>
+							</bestprice>
+							<category_import translate="title">
+								<title>Category Import</title>
+								<sort_order>52</sort_order>
+							</category_import>
+							<matching translate="title">
+								<title>Matching</title>
+								<sort_order>53</sort_order>
+							</matching>
+							<product_export translate="title">
+								<title>Product Export</title>
+								<sort_order>54</sort_order>
+							</product_export>
+						</children>
+					</meinpaket>
 					<system>
 						<children>
 							<config>

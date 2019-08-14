@@ -8,6 +8,14 @@ class Dhl_MeinPaket_Adminhtml_BestPriceController extends Mage_Adminhtml_Control
 		$this->loadLayout ()->_setActiveMenu ( 'meinpaket/bestprice' )->_addBreadcrumb ( Mage::helper ( 'meinpaket' )->__ ( 'Best Price' ), Mage::helper ( 'meinpaket' )->__ ( 'Best Price' ) );
 		return $this;
 	}
+	/**
+	 * (non-PHPdoc)
+	 * 
+	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
+	 */
+	protected function _isAllowed() {
+		return Mage::getSingleton ( 'admin/session' )->isAllowed ( 'admin/meinpaket/bestprice' );
+	}
 	public function indexAction() {
 		$this->_initAction ()->renderLayout ();
 	}

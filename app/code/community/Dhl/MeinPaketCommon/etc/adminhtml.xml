@@ -4,14 +4,14 @@
 		<meinpaket>
 			<title>Allyouneed</title>
 			<children>
-				<meinpaket_log translate="title" module="meinpaketcommon">
+				<log translate="title" module="meinpaketcommon">
 					<title>Log</title>
 					<action>meinpaketcommon/adminhtml_log</action>
-				</meinpaket_log>
-				<meinpaket_async translate="title" module="meinpaketcommon">
+				</log>
+				<async translate="title" module="meinpaketcommon">
 					<title>Async</title>
 					<action>meinpaketcommon/adminhtml_async</action>
-				</meinpaket_async>
+				</async>
 			</children>
 			<sort_order>90</sort_order>
 			<class>meinpaket</class>
@@ -21,6 +21,23 @@
 		<resources>
 			<admin>
 				<children>
+					<meinpaket translate="title">
+						<title>Allyouneed</title>
+						<children>
+							<async translate="title">
+								<title>Async</title>
+								<sort_order>40</sort_order>
+							</async>
+							<log translate="title">
+								<title>Log</title>
+								<sort_order>41</sort_order>
+							</log>
+							<order_import translate="title">
+								<title>Order Import</title>
+								<sort_order>42</sort_order>
+							</order_import>
+						</children>
+					</meinpaket>
 					<system>
 						<children>
 							<config>

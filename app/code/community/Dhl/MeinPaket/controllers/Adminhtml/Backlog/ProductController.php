@@ -4,6 +4,14 @@ class Dhl_MeinPaket_Adminhtml_Backlog_ProductController extends Mage_Adminhtml_C
 		$this->loadLayout ()->_setActiveMenu ( 'meinpaket/backlog' )->_addBreadcrumb ( Mage::helper ( 'meinpaket' )->__ ( 'Backlog' ), Mage::helper ( 'meinpaket' )->__ ( 'Backlog' ) );
 		return $this;
 	}
+	/**
+	 * (non-PHPdoc)
+	 * 
+	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
+	 */
+	protected function _isAllowed() {
+		return Mage::getSingleton ( 'admin/session' )->isAllowed ( 'admin/meinpaket/backlog' );
+	}
 	public function indexAction() {
 		$this->_initAction ()->renderLayout ();
 	}

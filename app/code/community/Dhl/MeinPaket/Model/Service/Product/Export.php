@@ -21,7 +21,7 @@ class Dhl_MeinPaket_Model_Service_Product_Export extends Dhl_MeinPaketCommon_Mod
 	 */
 	public function __construct() {
 		$this->_processableProducts = array ();
-		$this->_productHelper = Mage::helper ( 'meinpaket/product' );
+		$this->_productHelper = Mage::helper ( 'meinpaketcommon/product' );
 	}
 	
 	/**
@@ -69,7 +69,8 @@ class Dhl_MeinPaket_Model_Service_Product_Export extends Dhl_MeinPaketCommon_Mod
 						$seenMagentoProducts [$productId] = true;
 						
 						/* @var $product Mage_Catalog_Model_Product */
-						$product = Mage::getModel ( 'catalog/product' )->load ( $productId );
+						$product = Mage::getModel ( 'catalog/product' )->setStoreId(
+								Mage::helper('meinpaketcommon/data')->getMeinPaketStoreId())->load ( $productId );
 						
 						$syncMode = $product->getData ( 'sync_with_dhl_mein_paket' );
 						

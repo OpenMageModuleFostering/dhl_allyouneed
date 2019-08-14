@@ -272,7 +272,7 @@ class Dhl_MeinPaket_Helper_Product extends Mage_Core_Helper_Abstract {
 		if ($simpleProduct->getTypeId () === Mage_Catalog_Model_Product_Type::TYPE_SIMPLE) {
 			$parentIds = Mage::getModel ( 'catalog/product_type_configurable' )->getParentIdsByChild ( $simpleProduct->getId () );
 			if (isset ( $parentIds [0] )) {
-				$parentConfigurable = Mage::getModel ( 'catalog/product' )->load ( $parentIds [0] );
+				$parentConfigurable = Mage::getModel ( 'catalog/product' )->setStoreId(Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStoreId ())->load ( $parentIds [0] );
 			}
 		}
 		

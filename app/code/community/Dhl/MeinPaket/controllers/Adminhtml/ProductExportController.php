@@ -41,6 +41,15 @@ class Dhl_MeinPaket_Adminhtml_ProductExportController extends Mage_Adminhtml_Con
 	}
 	
 	/**
+	 * (non-PHPdoc)
+	 * 
+	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
+	 */
+	protected function _isAllowed() {
+		return Mage::getSingleton ( 'admin/session' )->isAllowed ( 'admin/meinpaket/product_export' );
+	}
+	
+	/**
 	 * Default action.
 	 *
 	 * @return void
@@ -75,7 +84,7 @@ class Dhl_MeinPaket_Adminhtml_ProductExportController extends Mage_Adminhtml_Con
 		$results = null;
 		
 		try {
-			$results = $exportService->exportProducts ( );
+			$results = $exportService->exportProducts ();
 			
 			if ($debugMode) {
 				Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( 'DEBUG:' . $results->debugOutput () );
@@ -105,10 +114,10 @@ class Dhl_MeinPaket_Adminhtml_ProductExportController extends Mage_Adminhtml_Con
 		$this->_initAction ();
 		$block = $this->getLayout ()->getBlock ( 'meinpaket.adminhtml_productExport_export' );
 		/*
-		if ($results !== null) {
-			$block->setResults ( $results );
-		}
-		*/
+		 * if ($results !== null) {
+		 * $block->setResults ( $results );
+		 * }
+		 */
 		$this->renderLayout ();
 	}
 	

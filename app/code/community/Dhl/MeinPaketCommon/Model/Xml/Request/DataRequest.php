@@ -22,7 +22,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_DataRequest extends Dhl_MeinPaketCom
 	 */
 	public function __construct() {
 		parent::__construct ();
-		$this->productHelper = Mage::helper ( 'meinpaket/product' );
+		$this->productHelper = Mage::helper ( 'meinpaketcommon/product' );
 	}
 	
 	/**

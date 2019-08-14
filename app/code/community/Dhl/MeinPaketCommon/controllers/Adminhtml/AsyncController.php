@@ -8,6 +8,14 @@ class Dhl_MeinPaketCommon_Adminhtml_AsyncController extends Mage_Adminhtml_Contr
 		$this->loadLayout ()->_setActiveMenu ( 'meinpaketcommon/async' )->_addBreadcrumb ( Mage::helper ( 'meinpaketcommon' )->__ ( 'Async' ), Mage::helper ( 'meinpaketcommon' )->__ ( 'Async' ) );
 		return $this;
 	}
+	/**
+	 * (non-PHPdoc)
+	 * 
+	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
+	 */
+	protected function _isAllowed() {
+		return Mage::getSingleton ( 'admin/session' )->isAllowed ( 'admin/meinpaket/async' );
+	}
 	public function indexAction() {
 		$this->_initAction ()->renderLayout ();
 	}

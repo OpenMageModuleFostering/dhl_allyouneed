@@ -19,6 +19,14 @@ class Dhl_MeinPaket_Adminhtml_CategoryImportController extends Mage_Adminhtml_Co
 		$this->_title ( $this->__ ( 'Allyouneed' ) )->_title ( $this->__ ( 'Category Import' ) );
 		return $this;
 	}
+	/**
+	 * (non-PHPdoc)
+	 * 
+	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
+	 */
+	protected function _isAllowed() {
+		return Mage::getSingleton ( 'admin/session' )->isAllowed ( 'admin/meinpaket/category_import' );
+	}
 	
 	/**
 	 * Default action.

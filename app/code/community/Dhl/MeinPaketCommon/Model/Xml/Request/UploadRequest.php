@@ -47,11 +47,18 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 	protected $productHelper = null;
 	
 	/**
+	 *
+	 * @var Dhl_MeinPaketCommon_Helper_Data
+	 */
+	protected $dataHelper = null;
+	
+	/**
 	 * Default Constructor.
 	 */
 	public function __construct() {
 		parent::__construct ();
-		$this->productHelper = Mage::helper ( 'meinpaket/product' );
+		$this->productHelper = Mage::helper ( 'meinpaketcommon/product' );
+		$this->dataHelper = Mage::helper ( 'meinpaketcommon/data' );
 	}
 	
 	/**
@@ -88,7 +95,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 	 * @param Mage_Catalog_Model_Product $product        	
 	 * @return DOMElement
 	 */
-	public function addOffer(Mage_Catalog_Model_Product $product) {
+	public function addOffer(Mage_Catalog_Model_Product $product, Mage_Catalog_Model_Product $configurableProduct = null, $complete = true) {
 		$offer = $this->getDocument ()->createElement ( 'productOffer' );
 		
 		if (! $product->getData ( 'sync_with_dhl_mein_paket' )) {
@@ -99,16 +106,20 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 		// product id
 		$offer->appendChild ( $this->getDocument ()->createElement ( 'common:productId', $product->getId () ) );
 		
-		// ean
-		$ean = Mage::helper ( 'meinpaket/product' )->getEan ( $product );
-		if (! empty ( $ean )) {
-			$offer->appendChild ( $this->getDocument ()->createElement ( 'common:ean', $ean ) );
-		}
+		$meinPaketId = $product->getData ( 'meinpaket_id' );
 		
-		// manufacturer
-		$manufacturer = $product->getAttributeText ( 'manufacturer' );
-		if (! empty ( $manufacturer )) {
-			$offer->appendChild ( $this->getCDATANode ( 'common:manufacturerName', $manufacturer ) );
+		// ean
+		if (strlen ( $meinPaketId ) <= 0 && $complete) {
+			$ean = $this->productHelper->getEan ( $product );
+			if (! empty ( $ean )) {
+				$offer->appendChild ( $this->getDocument ()->createElement ( 'common:ean', $ean ) );
+			}
+			
+			// manufacturer
+			$manufacturer = $product->getAttributeText ( 'manufacturer' );
+			if (! empty ( $manufacturer )) {
+				$offer->appendChild ( $this->getCDATANode ( 'common:manufacturerName', $manufacturer ) );
+			}
 		}
 		
 		// price
@@ -134,8 +145,31 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 			$offer->appendChild ( $this->getDocument ()->createElement ( 'deliverytime', $deliveryTime ) );
 		}
 		
-		$this->getOffers ()->appendChild ( $offer );
+		if (strlen ( $meinPaketId ) <= 0 && $complete) {
+			/*
+			 * // marketplace category
+			 * $meinpaketCategory = $product->getData ( 'meinpaket_category' );
+			 * if (strlen ( $meinpaketCategory ) > 0) {
+			 * $mNode = $this->getDocument ()->createElement ( 'marketplaceCategory' );
+			 * $mNode->setAttribute ( 'code', $meinpaketCategory );
+			 * $offer->appendChild ( $mNode );
+			 * } else {
+			 * throw new Dhl_MeinPaketCommon_Model_Exception_MissingDataException ( $product->getId (), 'dhl_marketplace_category_id' );
+			 * }
+			 */
+			
+			if ($configurableProduct == null) {
+				$type = Mage::getModel ( 'catalog/product_type_configurable' );
+				$parentIdArray = $type->getParentIdsByChild ( $product->getId () );
+				if (isset ( $parentIdArray [0] )) {
+					$configurableProduct = Mage::getModel ( 'catalog/product' )->setStoreId ( $this->dataHelper->getMeinPaketStoreId () )->load ( $parentIdArray [0] );
+				}
+			}
+			
+			$this->exportAttributes ( $product, $offer, $configurableProduct );
+		}
 		
+		$this->getOffers ()->appendChild ( $offer );
 		$this->setHasData ();
 		
 		return $offer;
@@ -237,15 +271,25 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 	 * @return DOMNode
 	 */
 	protected function handleSimpleProduct(Mage_Catalog_Model_Product $product, Mage_Catalog_Model_Product $configurableProduct = null) {
-		if ($configurableProduct == null) {
+		if ($configurableProduct == NULL) {
+			/* @var $type Mage_Catalog_Model_Product_Type_Configurable */
 			$type = Mage::getModel ( 'catalog/product_type_configurable' );
 			$parentIdArray = $type->getParentIdsByChild ( $product->getId () );
-			if (isset ( $parentIdArray [0] )) {
-				$configurableProduct = Mage::getModel ( 'catalog/product' )->load ( $parentIdArray [0] );
+			
+			if (is_array ( $parentIdArray )) {
+				foreach ( $parentIdArray as $parentId ) {
+					$aProduct = Mage::getModel ( 'catalog/product' )->setStoreId ( $this->dataHelper->getMeinPaketStoreId () )->load ( $parentId );
+					
+					// check resolved parent for configurable
+					if ($aProduct->getTypeId () == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE) {
+						$configurableProduct = $aProduct;
+						break;
+					}
+				}
 			}
 		}
-
-		if (! $this->productHelper->isActive($product) && $configurableProduct == null) {
+		
+		if (! $this->productHelper->isActive ( $product ) && $configurableProduct == null) {
 			$this->removeProduct ( $product );
 			return false;
 		}
@@ -259,7 +303,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 		$productDescription->appendChild ( $productId );
 		
 		// ean (optional)
-		$ean = Mage::helper ( 'meinpaket/product' )->getEan ( $product );
+		$ean = $this->productHelper->getEan ( $product );
 		if (! empty ( $ean )) {
 			$productDescription->appendChild ( $this->getDocument ()->createElement ( 'common:ean', $ean ) );
 		}
@@ -330,7 +374,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 		
 		$this->exportAttributes ( $product, $productDescription, $configurableProduct );
 		$this->getProductDescriptions ()->appendChild ( $productDescription );
-		$this->addOffer ( $product );
+		$this->addOffer ( $product, $configurableProduct, false );
 		
 		$this->setHasData ();
 		
@@ -351,8 +395,6 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 		
 		foreach ( $product->getAttributes () as $attribute ) {
 			/* @var $attribute Mage_Eav_Model_Attribute */
-			
-			$isConfigurable = in_array ( $attribute->getAttributeCode (), $configurableAttributes );
 			
 			if (strlen ( $attribute->getMeinpaketAttribute () ) <= 0 || $attribute->getMeinpaketAttribute () == 'None') {
 				continue;
@@ -377,7 +419,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 			}
 			
 			$attributeNode = $this->getDocument ()->createElement ( "attribute" );
-			if ($isConfigurable) {
+			if (in_array ( $attribute->getAttributeCode (), $configurableAttributes )) {
 				$attributeNode->setAttribute ( "variant", "true" );
 			}
 			$attributeNode->setAttribute ( "code", $attribute->getMeinpaketAttribute () == 'Default' ? $attribute->getAttributeCode () : $attribute->getMeinpaketAttribute () );
@@ -397,7 +439,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 	 * @param Mage_Catalog_Model_Product $product        	
 	 */
 	protected function handleConfigurableProduct(Mage_Catalog_Model_Product $product) {
-		if (! $this->productHelper->isActive($product)) {
+		if (! $this->productHelper->isActive ( $product )) {
 			$this->removeProduct ( $product );
 			return false;
 		}

@@ -22,14 +22,16 @@
 					</tr>
 					<tr>
 						<td class="label"><label for="mp_ean">EAN</label></td>
-						<td class="value"><?php echo Mage::helper('meinpaket/product')->getEAN($product); ?></td>
+						<td class="value"><?php echo Mage::helper('meinpaketcommon/product')->getEAN($product); ?></td>
 						<td class="value"><input id="mp_ean" name="mp_ean" type="checkbox"
 							value="1" class="input-checkbox" checked="checked"></td>
 					</tr>
+					<?php if(Mage::getSingleton('admin/session')->isAllowed('admin/meinpaket/matching')):?>
 					<tr>
 						<td colspan="3"><button onclick="loadSuggestions(); return false;"
 								class="scalable btn-wysiwyg">Load suggestions</button></td>
 					</tr>
+					<?php endif;?>
 				</tbody>
 			</table>
 		</div>

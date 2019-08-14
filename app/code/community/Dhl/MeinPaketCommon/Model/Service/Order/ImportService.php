@@ -73,7 +73,8 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 	 */
 	const DISABLED_ORDER_STATUS = 4;
 	const USE_GUEST_ACCOUNT_CONFIG = 'meinpaket/order/use_guest_account';
-	const CUSTOMER_GROUP_CONFIG = 'meinpaket/order/customer_group';
+	const CUSTOMER_GROUP_CONFIG = 'meinpaket/customer/default_group';
+	const SHIPPING_METHOD_CONFIG = 'meinpaket/shipment/default_shipment_method';
 	
 	/**
 	 *
@@ -87,6 +88,12 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 	 * @var string
 	 */
 	protected $_eventPrefix = 'meinpaketcommon_service_order_importService';
+	
+	/**
+	 *
+	 * @var Dhl_MeinPaketCommon_Helper_Data
+	 */
+	protected $_dataHelper;
 	
 	/**
 	 * Constructor.
@@ -104,6 +111,8 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		
 		$_outOfStockOrders = array ();
 		$this->_disabledProductOrders = array ();
+		
+		$this->_dataHelper = Mage::helper ( 'meinpaketcommon/data' );
 		
 		parent::__construct ();
 	}
@@ -202,8 +211,19 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 	 * @return int
 	 */
 	protected function _importOrder(Dhl_MeinPaketCommon_Model_Xml_Response_Partial_Order $order, $paymentMethod = self::IMPORT_PAYMENT_METHOD) {
-		$storeId = Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStoreId ();
-		$store = Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStore ();
+		$storeId = $this->_dataHelper->getMeinPaketStoreId ();
+		$store = $this->_dataHelper->getMeinPaketStore ();
+		/* @var $taxCalculation Mage_Tax_Model_Calculation */
+		$taxCalculation = Mage::getModel ( 'tax/calculation' );
+		
+		/* @var $taxHelper Mage_Tax_Helper_Data */
+		// $taxHelper = Mage::helper ( 'tax' );
+		
+		/* @var $taxConfig Mage_Tax_Model_Config */
+		$taxConfig = Mage::getSingleton ( 'tax/config' );
+		
+		$priceIncludesTax = $taxConfig->priceIncludesTax ( $store );
+		$shippingIncludesTax = $taxConfig->shippingPriceIncludesTax ( $store );
 		
 		/* @var $orderObj Mage_Sales_Model_Order */
 		$orderObj = Mage::getModel ( 'sales/order' )->load ( $order->getOrderId (), 'dhl_mein_paket_order_id' );
@@ -232,6 +252,17 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		
 		$hasNoConfigurables = true;
 		$quoteItems = array ();
+		
+		$billingAddress = $quoteObj->getBillingAddress ();
+		$billingAddress->addData ( $this->_getAddressData ( $order->getBillingAddress () ) );
+		$shippingAddress = $quoteObj->getShippingAddress ();
+		if ($order->getDeliveryAddress () != null) {
+			$shippingAddress->addData ( $this->_getAddressData ( $order->getDeliveryAddress () ) );
+		} else {
+			$shippingAddress->addData ( $this->_getAddressData ( $order->getBillingAddress () ) );
+		}
+		
+		$taxRequest = $taxCalculation->getRateRequest ( $shippingAddress, $billingAddress, $customer, $store );
 		
 		foreach ( $order->getEntries () as $orderEntry ) {
 			/* var $orderEntry Dhl_MeinPaketCommon_Model_Xml_Response_Partial_Order_Entry */
@@ -268,11 +299,22 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 						/* @var $item Mage_Sales_Model_Quote_Item|string */
 						
 						if (is_object ( $item )) {
+							$taxRequest->setProductClassId ( $item->getProduct ()->getTaxClassId () );
+							$percent = $taxCalculation->getRate ( $taxRequest );
+							if ($percent <= 0) {
+								$percent = 19;
+							}
+							
+							if ($priceIncludesTax) {
+								$customPrice = $orderEntry->getBasePrice ();
+							} else {
+								$customPrice = $this->_dataHelper->priceWithoutTax ( $orderEntry->getBasePrice (), $percent );
+							}
+							
+							/* @var $item Mage_Sales_Model_Quote_Item */
 							$item->setStoreId ( $storeId );
-							$item->setCustomPrice ( $orderEntry->getBasePrice () );
-							$item->setOriginalCustomPrice ( $orderEntry->getBasePrice () );
-							$item->setOriginalPrice ( $productObj->getPrice () );
-							$item->setBaseOriginalPrice ( $productObj->getPrice () );
+							$item->setCustomPrice ( $customPrice );
+							$item->setOriginalCustomPrice ( $customPrice );
 							$item->getProduct ()->setIsSuperMode ( true );
 						} else {
 							Mage::log ( $item );
@@ -300,23 +342,20 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 			}
 		}
 		
-		$rate = $this->calculateRate ( $order );
-		
-		$billingAddress = $quoteObj->getBillingAddress ();
-		$billingAddress->addData ( $this->_getAddressData ( $order->getBillingAddress () ) );
-		$shippingAddress = $quoteObj->getShippingAddress ();
-		if ($order->getDeliveryAddress () != null) {
-			$shippingAddress->addData ( $this->_getAddressData ( $order->getDeliveryAddress () ) );
+		if ($shippingIncludesTax) {
+			$deliveryCosts = $orderEntry->getBasePrice ();
 		} else {
-			$shippingAddress->addData ( $this->_getAddressData ( $order->getBillingAddress () ) );
+			$deliveryCosts = $dataHelper->priceWithoutTax ( $order->getTotalDeliveryCosts (), "19" );
 		}
+		
+		$rate = $this->calculateRate ( $order );
 		
 		$shippingAddress->setCollectShippingRates ( false );
 		$shippingAddress->addShippingRate ( $rate );
 		$shippingAddress->setShippingMethod ( $rate->getCode () );
 		
-		$shippingAddress->setBaseShippingAmount ( $order->getTotalDeliveryCosts () );
-		$shippingAddress->setShippingAmount ( $order->getTotalDeliveryCosts () );
+		$shippingAddress->setBaseShippingAmount ( $deliveryCosts );
+		$shippingAddress->setShippingAmount ( $deliveryCosts );
 		$shippingAddress->setPaymentMethod ( $paymentMethod );
 		
 		$quoteObj->getPayment ()->importData ( array (
@@ -326,8 +365,17 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		// Dhl_MeinPaketCommon_Model_Carrier_Meinpaket::unlock ();
 		// Dhl_MeinPaketCommon_Model_Carrier_Meinpaket::setDeliveryCosts ( $order->getTotalDeliveryCosts () );
 		
-		$quoteObj->collectTotals ();
+		// Required for Firegento_MageSetup
+		/* @var $checkoutSession Mage_Checkout_Model_Session */
+		$checkoutSession = Mage::getSingleton ( 'checkout/session' );
+		$checkoutSession->replaceQuote ( $quoteObj );
+		
+		$quoteObj->setTotalsCollectedFlag ( false )->collectTotals ();
+		$quoteObj->setGrandTotal ( $order->getTotalPrice () );
 		$quoteObj->save ();
+		
+		// Required for Firegento_MageSetup
+		$checkoutSession->clear ();
 		
 		/* @var $quoteObj Mage_Sales_Model_Service_Quote */
 		$serviceQuote = Mage::getModel ( 'sales/service_quote', $quoteObj );
@@ -336,7 +384,7 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		/* @var $orderModel Mage_Sales_Model_Order */
 		$orderModel = $serviceQuote->getOrder ();
 		/**
-		 * triggert aufruf von authorizes() auf dem payment model (ggf auch capture() )
+		 * Triggert Aufruf von authorize() auf dem payment model (ggf auch capture() )
 		 */
 		
 		$contactData = $order->getContactData ();
@@ -426,7 +474,7 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		}
 		
 		// Set store and website for loadByEmail.
-		$customer->setStore ( Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStore () );
+		$customer->setStore ( $this->_dataHelper->getMeinPaketStore () );
 		// Could not find customer by meinpaket_buyer_id. As there can only be one customer for a given
 		// email try to load one.
 		$customer->loadByEmail ( $order->getContactData ()->getEmail () );
@@ -437,7 +485,7 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		
 		// New customer
 		// Set store and website again after loadByEmail reset it.
-		$customer->setStore ( Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStore () );
+		$customer->setStore ( $this->_dataHelper->getMeinPaketStore () );
 		$customer->setFirstname ( $order->getBillingAddress ()->getFirstName () );
 		$customer->setLastname ( $order->getBillingAddress ()->getLastName () );
 		$customer->setEmail ( $order->getContactData ()->getEmail () );
@@ -472,15 +520,13 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 	 * @return Mage_Sales_Model_Quote_Address_Rate
 	 */
 	protected function calculateRate(Dhl_MeinPaketCommon_Model_Xml_Response_Partial_Order $order) {
-		$carrier = Mage::getModel ( 'meinpaketcommon/carrier_meinpaket' );
-		/* @var $carrier Dhl_MeinPaketCommon_Model_Carrier_Meinpaket */
-		$methods = $carrier->getAllowedMethods ();
+		$method = Mage::getStoreConfig ( self::SHIPPING_METHOD_CONFIG );
+		$parts = explode ( "_", $method, 2 );
+		
 		$result = Mage::getModel ( 'sales/quote_address_rate' );
 		/* @var $result Mage_Sales_Model_Quote_Address_Rate */
 		
-		$parts = explode ( "_", self::IMPORT_SHIPPING_METHOD );
-		
-		$result->setCarrierTitle ( 'Allyouneed' )->setCode ( self::IMPORT_SHIPPING_METHOD )->setCarrier ( $parts [0] )->setMethod ( 'standard' )->setMethodTitle ( 'Allyouneed' )->setMethodDescription ( 'Allyouneed' )->setCost ( $order->getTotalDeliveryCosts () )->setPrice ( $order->getTotalDeliveryCosts () );
+		$result->setCarrierTitle ( 'Allyouneed' )->setCode ( $method )->setCarrier ( $parts [0] )->setMethod ( $parts [1] )->setCost ( $order->getTotalDeliveryCosts () )->setPrice ( $order->getTotalDeliveryCosts () );
 		
 		return $result;
 	}

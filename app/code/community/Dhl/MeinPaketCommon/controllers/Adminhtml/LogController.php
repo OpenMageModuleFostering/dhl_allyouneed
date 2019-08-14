@@ -8,6 +8,14 @@ class Dhl_MeinPaketCommon_Adminhtml_LogController extends Mage_Adminhtml_Control
 		$this->loadLayout ()->_setActiveMenu ( 'meinpaketcommon/log' )->_addBreadcrumb ( Mage::helper ( 'meinpaketcommon' )->__ ( 'Log' ), Mage::helper ( 'meinpaketcommon' )->__ ( 'Log' ) );
 		return $this;
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
+	 */
+	protected function _isAllowed() {
+		return Mage::getSingleton ( 'admin/session' )->isAllowed ( 'admin/meinpaket/log' );
+	}
 	public function indexAction() {
 		$this->_initAction ()->renderLayout ();
 	}
