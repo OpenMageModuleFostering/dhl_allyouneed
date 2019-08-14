@@ -44,15 +44,15 @@ class Dhl_MeinPaket_Helper_Cron extends Mage_Core_Helper_Abstract {
 					case Dhl_MeinPaket_Model_Cron::SYNC_CATALOG :
 						$res = Mage::getSingleton ( 'meinpaket/service_product_export' )->exportProducts ();
 						break;
-					case Dhl_MeinPaket_Model_Cron::SYNC_ORDERS :
+					case Dhl_MeinPaketCommon_Model_Cron::SYNC_ORDERS :
 						$res = Mage::getSingleton ( 'meinpaketcommon/service_order_importService' )->importOrders ();
 						break;
-					case Dhl_MeinPaket_Model_Cron::SYNC_ASYNC :
+					case Dhl_MeinPaketCommon_Model_Cron::SYNC_ASYNC :
 						$res = Mage::getSingleton ( 'meinpaketcommon/service_async' )->process ();
 						break;
 				}
 				
-				$message = is_string($res) ? $res : Zend_Debug::dump ( $res, null, false );
+				$message = is_string ( $res ) ? $res : Zend_Debug::dump ( $res, null, false );
 				
 				if ($addMessage && strlen ( $message ) > 0) {
 					$session->addSuccess ( $this->__ ( 'Ran "%s":<pre>%s</pre>', $code, $message ) );

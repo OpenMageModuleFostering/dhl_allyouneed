@@ -8,7 +8,7 @@
  * @subpackage	Adminhtml
  * @version		$Id$
  */
-class Dhl_MeinPaketCommon_Adminhtml_OrderImportController extends Mage_Adminhtml_Controller_Action {
+class Dhl_MeinPaketCommon_Adminhtml_Meinpaketcommon_OrderImportController extends Mage_Adminhtml_Controller_Action {
 	/**
 	 * Initialized the controller.
 	 *
@@ -22,6 +22,7 @@ class Dhl_MeinPaketCommon_Adminhtml_OrderImportController extends Mage_Adminhtml
 	
 	/**
 	 * (non-PHPdoc)
+	 *
 	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
 	 */
 	protected function _isAllowed() {

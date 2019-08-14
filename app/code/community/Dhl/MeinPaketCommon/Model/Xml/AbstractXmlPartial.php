@@ -165,9 +165,11 @@ abstract class Dhl_MeinPaketCommon_Model_Xml_AbstractXmlPartial {
 	 * @return string
 	 */
 	protected function escapeStringForMeinPaket($string) {
-		$string = utf8_decode ( $string );
-		$string = html_entity_decode ( $string );
-		$string = utf8_encode ( $string );
+		$string = Mage::helper ( 'meinpaketcommon' )->filterHTMLTags ( $string );
+		// $string = utf8_decode ( $string );
+		$charset = Mage::getStoreConfig ( 'design/head/default_charset' );
+		$string = html_entity_decode ( $string, ENT_COMPAT | ENT_HTML401, strtoupper ( $charset ) );
+		// $string = utf8_encode ( $string );
 		
 		return $string;
 	}

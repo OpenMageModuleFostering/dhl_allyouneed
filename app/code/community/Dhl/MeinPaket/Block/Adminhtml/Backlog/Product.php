@@ -19,15 +19,15 @@ class Dhl_MeinPaket_Block_Adminhtml_Backlog_Product extends Mage_Adminhtml_Block
 		
 		$this->_addButton ( 'run_async', array (
 				'label' => Mage::helper ( 'meinpaket' )->__ ( 'Synchronize Async Jobs' ),
-				'onclick' => 'setLocation(\'' . $this->getUrl ( '*/*/run', array (
-						'cronjob' => Dhl_MeinPaket_Model_Cron::SYNC_ASYNC 
+				'onclick' => 'setLocation(\'' . $this->getUrl ( 'adminhtml/meinpaket_backlog_product/run', array (
+						'cronjob' => Dhl_MeinPaketCommon_Model_Cron::SYNC_ASYNC 
 				) ) . '\')',
 				'class' => 'add' 
 		) );
 		
 		$this->_addButton ( 'run_catalog', array (
 				'label' => Mage::helper ( 'meinpaket' )->__ ( 'Synchronize Productlist' ),
-				'onclick' => 'setLocation(\'' . $this->getUrl ( '*/*/run', array (
+				'onclick' => 'setLocation(\'' . $this->getUrl ( 'adminhtml/meinpaket_backlog_product/run', array (
 						'cronjob' => Dhl_MeinPaket_Model_Cron::SYNC_CATALOG 
 				) ) . '\')',
 				'class' => 'add' 
@@ -35,15 +35,15 @@ class Dhl_MeinPaket_Block_Adminhtml_Backlog_Product extends Mage_Adminhtml_Block
 		
 		$this->_addButton ( 'run_orders', array (
 				'label' => Mage::helper ( 'meinpaket' )->__ ( 'Import Orders' ),
-				'onclick' => 'setLocation(\'' . $this->getUrl ( '*/*/run', array (
-						'cronjob' => Dhl_MeinPaket_Model_Cron::SYNC_ORDERS 
+				'onclick' => 'setLocation(\'' . $this->getUrl ( 'adminhtml/meinpaket_backlog_product/run', array (
+						'cronjob' => Dhl_MeinPaketCommon_Model_Cron::SYNC_ORDERS 
 				) ) . '\')',
 				'class' => 'add' 
 		) );
 		
 		$this->_addButton ( 'schedule_jobs', array (
 				'label' => Mage::helper ( 'meinpaket' )->__ ( 'Schedule Jobs' ),
-				'onclick' => 'setLocation(\'' . $this->getUrl ( '*/*/schedule', array (
+				'onclick' => 'setLocation(\'' . $this->getUrl ( 'adminhtml/meinpaket_backlog_product/schedule', array (
 						'cronjob' => 'all' 
 				) ) . '\')',
 				'class' => 'add' 
@@ -51,7 +51,7 @@ class Dhl_MeinPaket_Block_Adminhtml_Backlog_Product extends Mage_Adminhtml_Block
 		
 		// $this->_addButton ( 'schedule_catalog', array (
 		// 'label' => Mage::helper ( 'meinpaket' )->__ ( 'Schedule Catalog' ),
-		// 'onclick' => 'setLocation(\'' . $this->getUrl ( '*/*/schedule', array (
+		// 'onclick' => 'setLocation(\'' . $this->getUrl ( 'adminhtml/meinpaket_backlog_product/schedule', array (
 		// 'cronjob' => Dhl_MeinPaket_Model_Cron::SYNC_CATALOG
 		// ) ) . '\')',
 		// 'class' => 'add'
@@ -59,8 +59,8 @@ class Dhl_MeinPaket_Block_Adminhtml_Backlog_Product extends Mage_Adminhtml_Block
 		
 		// $this->_addButton ( 'schedule_orders', array (
 		// 'label' => Mage::helper ( 'meinpaket' )->__ ( 'Schedule Orders' ),
-		// 'onclick' => 'setLocation(\'' . $this->getUrl ( '*/*/schedule', array (
-		// 'cronjob' => Dhl_MeinPaket_Model_Cron::SYNC_ORDERS
+		// 'onclick' => 'setLocation(\'' . $this->getUrl ( 'adminhtml/meinpaket_backlog_product/schedule', array (
+		// 'cronjob' => Dhl_MeinPaketCommon_Model_Cron::SYNC_ORDERS
 		// ) ) . '\')',
 		// 'class' => 'add'
 		// ) );

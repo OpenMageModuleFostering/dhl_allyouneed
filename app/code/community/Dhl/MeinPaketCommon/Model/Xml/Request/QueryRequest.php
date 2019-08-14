@@ -131,6 +131,10 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_QueryRequest extends Dhl_MeinPaketCo
 		$externalId = $this->getDocument ()->createElement ( "externalId", $cartId );
 		$this->order_externalIds->appendChild ( $externalId );
 	}
+	
+	/**
+	 * Initialize order.
+	 */
 	protected function _initializeOrder() {
 		if ($this->orders == null) {
 			$this->orders = $this->getDocument ()->createElement ( 'orders' );

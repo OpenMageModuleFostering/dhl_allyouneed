@@ -40,7 +40,7 @@
 							<td class="cell-assign a-center last">
 								<?php if (true || strlen($suggestion->getMarketplaceCategory())):?>
 									<a
-								href="<?php echo $this->getUrl('meinpaket/adminhtml_matching/apply', array('id' => Mage::registry('current_product')->getId(), 'category' => $suggestion->getMarketplaceCategory())); ?>">
+								href="<?php echo $this->getUrl('adminhtml/meinpaket_matching/apply', array('id' => Mage::registry('current_product')->getId(), 'category' => $suggestion->getMarketplaceCategory())); ?>">
 								<?php echo $this->__('Apply'); ?>
 								</a>
 								<?php endif;?>

@@ -8,7 +8,7 @@
  * @subpackage	Model_Order
  * @version		$Id$
  */
-class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Object {
+class Dhl_MeinPaketCommon_Model_Service_Order_ImportService {
 	/**
 	 * counts of imported and duplicate orders
 	 *
@@ -96,6 +96,12 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 	protected $_dataHelper;
 	
 	/**
+	 *
+	 * @var $client Dhl_MeinPaketCommon_Model_Client_XmlOverHttp
+	 */
+	protected $client;
+	
+	/**
 	 * Constructor.
 	 *
 	 * @return void
@@ -111,10 +117,8 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		
 		$_outOfStockOrders = array ();
 		$this->_disabledProductOrders = array ();
-		
 		$this->_dataHelper = Mage::helper ( 'meinpaketcommon/data' );
-		
-		parent::__construct ();
+		$this->client = Mage::getModel ( 'meinpaketcommon/client_xmlOverHttp' );
 	}
 	
 	/**
@@ -165,15 +169,12 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 	 * @return void
 	 */
 	public function importOrders($start = null, $stop = null) {
-		/* @var $client Dhl_MeinPaketCommon_Model_Client_XmlOverHttp */
-		$client = Mage::getModel ( 'meinpaketcommon/client_xmlOverHttp' );
-		
 		$queryRequest = new Dhl_MeinPaketCommon_Model_Xml_Request_QueryRequest ();
 		// $queryRequest->addOrders ( $start, $stop );
 		$queryRequest->addOrders ( $start, $stop, 'Open' );
 		
 		/* @var $queryResult Dhl_MeinPaketCommon_Model_Xml_Response_QueryResponse */
-		$queryResult = $client->send ( $queryRequest );
+		$queryResult = $this->client->send ( $queryRequest );
 		
 		if ($queryResult == null) {
 			return;
@@ -269,7 +270,6 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 			$productId = ( string ) $orderEntry->getProductId ();
 			
 			if ($hasNoConfigurables) {
-				
 				try {
 					/* @var $productObj Mage_Catalog_Model_Product */
 					$productObj = Mage::getModel ( 'catalog/product' )->setStoreId ( $storeId )->load ( $productId );
@@ -345,7 +345,7 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		if ($shippingIncludesTax) {
 			$deliveryCosts = $orderEntry->getBasePrice ();
 		} else {
-			$deliveryCosts = $dataHelper->priceWithoutTax ( $order->getTotalDeliveryCosts (), "19" );
+			$deliveryCosts = $this->_dataHelper->priceWithoutTax ( $order->getTotalDeliveryCosts (), "19" );
 		}
 		
 		$rate = $this->calculateRate ( $order );
@@ -390,8 +390,9 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		$contactData = $order->getContactData ();
 		
 		$orderModel->place ();
+		$orderModel->setCreatedAt ( $order->getOrderDate () );
+		$orderModel->setUpdatedAt ( $order->getLastModificationDate () );
 		$orderModel->setState ( Mage_Sales_Model_Order::STATE_PROCESSING, true );
-		$orderModel->setData ( 'created_at', $this->_getFormattedDateString ( $order->getOrderDate () ) );
 		$orderModel->setData ( 'customer_email', strlen ( $contactData->getEmail () ) ? $contactData->getEmail () : Mage::getStoreConfig ( 'meinpaket/customer/default_email' ) );
 		$orderModel->setData ( 'ext_customer_id', $contactData->getCustomerId () );
 		$orderModel->setData ( 'dhl_mein_paket_order_id', $order->getOrderId () );
@@ -451,6 +452,8 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 	 * @param string $isoDateString
 	 *        	@wins Code of the year contest
 	 * @return string
+	 * @deprecated
+	 *
 	 */
 	protected function _getFormattedDateString($isoDateString) {
 		$date = new Zend_Date ( $isoDateString, Zend_Date::ISO_8601 );
@@ -502,6 +505,12 @@ class Dhl_MeinPaketCommon_Model_Service_Order_ImportService extends Varien_Objec
 		
 		return $customer;
 	}
+	
+	/**
+	 * Create invoice for order.
+	 *
+	 * @param Mage_Sales_Model_Order $order        	
+	 */
 	public function createInvoice(Mage_Sales_Model_Order $order) {
 		/* @var $invoiceModel Sales_Model_Order_Invoice */
 		$invoice = $order->prepareInvoice ();

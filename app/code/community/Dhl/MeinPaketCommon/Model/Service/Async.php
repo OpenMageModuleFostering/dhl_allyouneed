@@ -26,6 +26,7 @@ class Dhl_MeinPaketCommon_Model_Service_Async extends Dhl_MeinPaketCommon_Model_
 		
 		$count = 0;
 		
+		/* @var $async Dhl_MeinPaketCommon_Model_Async */
 		foreach ( $asyncCollection as $async ) {
 			/* @var $statusRequest Dhl_MeinPaketCommon_Model_Xml_Request_AsynchronousStatusRequest */
 			$statusRequest = Mage::getModel ( 'meinpaketcommon/xml_request_asynchronousStatusRequest' );
@@ -33,7 +34,11 @@ class Dhl_MeinPaketCommon_Model_Service_Async extends Dhl_MeinPaketCommon_Model_
 			
 			$response = null;
 			if ($statusRequest->isHasData ()) {
-				$response = $client->send ( $statusRequest );
+				try {
+					$response = $client->send ( $statusRequest );
+				} catch ( Dhl_MeinPaketCommon_Model_Client_BadHttpReturnCodeException $e ) {
+					Mage::logException ( $e );
+				}
 			}
 			
 			if ($response != null && $response instanceof Dhl_MeinPaketCommon_Model_Xml_Response_AsynchronousStatusResponse) {

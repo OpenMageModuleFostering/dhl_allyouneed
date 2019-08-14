@@ -35,31 +35,28 @@ class Dhl_Postpay_Model_Service_Order_ImportService extends Dhl_MeinPaketCommon_
 	 * @return void
 	 */
 	public function importOrders($start = null, $stop = null) {
-		/* @var $client Dhl_MeinPaketCommon_Model_Client_XmlOverHttp */
-		$client = Mage::getModel ( 'meinpaketcommon/client_xmlOverHttp' );
+		$cartCollection = Mage::getModel ( 'postpay/cart' )->getCollection ()->addFilter ( 'state', Dhl_Postpay_Model_Cart::STATE_PENDING );
 		
-		$cartCollection = Mage::getModel ( 'postpay/cart' )->getCollection ()->addFilter ( 'state', 'PENDING' );
-		
+		$queryRequest = new Dhl_MeinPaketCommon_Model_Xml_Request_QueryRequest ();
 		foreach ( $cartCollection as $cart ) {
-			$queryRequest = new Dhl_MeinPaketCommon_Model_Xml_Request_QueryRequest ();
 			$queryRequest->addShoppingCartStatus ( $cart->getCartId () );
-			
-			if ($queryRequest->isHasData ()) {
-				$connection = Mage::getSingleton ( 'core/resource' )->getConnection ( 'core_write' );
-				try {
-					$connection->beginTransaction ();
-					
-					// Make saves and other actions that affect the database
-					$queryResult = $client->send ( $queryRequest );
-					
-					if ($queryResult != null && $queryResult instanceof Dhl_MeinPaketCommon_Model_Xml_Response_QueryResponse) {
-						$this->processQueryResponse ( $cart, $queryResult );
-					}
-					
-					$connection->commit ();
-				} catch ( Exception $e ) {
-					$connection->rollback ();
+		}
+		
+		if ($queryRequest->isHasData ()) {
+			$connection = Mage::getSingleton ( 'core/resource' )->getConnection ( 'core_write' );
+			try {
+				$connection->beginTransaction ();
+				
+				// Make saves and other actions that affect the database
+				$queryResult = $this->client->send ( $queryRequest );
+				
+				if ($queryResult != null && $queryResult instanceof Dhl_MeinPaketCommon_Model_Xml_Response_QueryResponse) {
+					$this->processQueryResponse ( $cart, $queryResult );
 				}
+				
+				$connection->commit ();
+			} catch ( Exception $e ) {
+				$connection->rollback ();
 			}
 		}
 		
@@ -75,80 +72,79 @@ class Dhl_Postpay_Model_Service_Order_ImportService extends Dhl_MeinPaketCommon_
 	protected function processQueryResponse(Dhl_Postpay_Model_Cart $cart, Dhl_MeinPaketCommon_Model_Xml_Response_QueryResponse $queryResult) {
 		$statusResponses = $queryResult->getShoppingCartStatusResponses ();
 		
-		reset ( $statusResponses );
-		$key = key ( $statusResponses );
-		$status = strtoupper ( $statusResponses [$key] );
-		
-		$orderModel = null;
-		/* @var $order Mage_Sales_Model_Order */
-		if ($cart->getOrderId () != null) {
-			$orderModel = Mage::getModel ( 'sales/order' )->load ( $cart->getOrderId () );
-		}
-		
-		switch ($status) {
-			case 'PENDING' :
-				break;
-			case 'CREATEDORDER' :
-				$queryRequest = new Dhl_MeinPaketCommon_Model_Xml_Request_QueryRequest ();
-				$queryRequest->addOrderExternalId ( $cart->getCartId () );
-				
-				if ($queryRequest->isHasData ()) {
-					/* @var $client Dhl_MeinPaketCommon_Model_Client_XmlOverHttp */
-					$client = Mage::getModel ( 'meinpaketcommon/client_xmlOverHttp' );
+		foreach ( $statusResponses as $key => $status ) {
+			$status = strtoupper ( $status );
+			
+			if ($status == Dhl_Postpay_Model_Cart::STATE_PENDING ) {
+				continue;
+			}
+			
+			$orderModel = null;
+			/* @var $orderModel Mage_Sales_Model_Order */
+			if ($cart->getOrderId () != null) {
+				$orderModel = Mage::getModel ( 'sales/order' )->load ( $cart->getOrderId () );
+			}
+			
+			switch ($status) {
+				case Dhl_Postpay_Model_Cart::STATE_CREATEDORDER :
+					$createdOrderRequest = new Dhl_MeinPaketCommon_Model_Xml_Request_QueryRequest ();
+					$createdOrderRequest->addOrderExternalId ( $cart->getCartId () );
 					
-					$queryResult = $client->send ( $queryRequest );
-					
-					if ($queryResult != null && $queryResult instanceof Dhl_MeinPaketCommon_Model_Xml_Response_QueryResponse) {
-						foreach ( $queryResult->getOrders () as $order ) {
-							/* @var $order Dhl_MeinPaketCommon_Model_Xml_Response_Partial_Order */
-							if ($orderModel != null && $orderModel->getId ()) {
-								$this->_orderCount ['imported'] ++;
-								$orderModel->setData ( 'dhl_mein_paket_order_id', $order->getOrderId () );
-								$this->createInvoice ( $orderModel );
-								
-								$cart->setState ( $status );
-								$cart->save ();
-							} else {
-								$successCode = $this->_importOrder ( $order, self::POSTPAY_IMPORT_PAYMENT_METHOD );
-								switch ($successCode) {
-									case self::IMPORTED_ORDER_STATUS :
-										$this->_orderCount ['imported'] ++;
-										
-										$cart->setState ( $status );
-										$cart->save ();
-										
-										break;
-									case self::DUPLICATE_ORDER_STATUS :
-										$this->_orderCount ['duplicates'] ++;
-										
-										$cart->setState ( $status );
-										$cart->save ();
-										
-										break;
-									case self::OUT_OF_STOCK_ORDER_STATUS :
-										$this->_orderCount ['outOfStock'] ++;
-										break;
-									case self::INVALID_PRODUCT_STATUS :
-										$this->_orderCount ['invalid'] ++;
-										break;
-									case self::DISABLED_ORDER_STATUS :
-										$this->_orderCount ['disabled'] ++;
-										break;
+					if ($createdOrderRequest->isHasData ()) {
+						$createdOrderResult = $this->client->send ( $createdOrderRequest );
+						
+						if ($createdOrderResult != null && $createdOrderResult instanceof Dhl_MeinPaketCommon_Model_Xml_Response_QueryResponse) {
+							foreach ( $createdOrderResult->getOrders () as $order ) {
+								/* @var $order Dhl_MeinPaketCommon_Model_Xml_Response_Partial_Order */
+								if ($orderModel != null && $orderModel->getId ()) {
+									$this->_orderCount ['imported'] ++;
+									$orderModel->setData ( 'dhl_mein_paket_order_id', $order->getOrderId () );
+									$this->createInvoice ( $orderModel );
+									
+									$cart->setState ( $status );
+									$cart->save ();
+								} else {
+									$successCode = $this->_importOrder ( $order, self::POSTPAY_IMPORT_PAYMENT_METHOD );
+									
+									switch ($successCode) {
+										case self::IMPORTED_ORDER_STATUS :
+											$this->_orderCount ['imported'] ++;
+											
+											$cart->setState ( $status );
+											$cart->save ();
+											
+											break;
+										case self::DUPLICATE_ORDER_STATUS :
+											$this->_orderCount ['duplicates'] ++;
+											
+											$cart->setState ( $status );
+											$cart->save ();
+											
+											break;
+										case self::OUT_OF_STOCK_ORDER_STATUS :
+											$this->_orderCount ['outOfStock'] ++;
+											break;
+										case self::INVALID_PRODUCT_STATUS :
+											$this->_orderCount ['invalid'] ++;
+											break;
+										case self::DISABLED_ORDER_STATUS :
+											$this->_orderCount ['disabled'] ++;
+											break;
+									}
 								}
 							}
 						}
 					}
-				}
-				
-				break;
-			case 'CANCELED' :
-				if ($order != null) {
-					$order->cancel ();
-					$order->save ();
-				}
-				$cart->setState ( $status );
-				$cart->save ();
-				break;
+					break;
+				case Dhl_Postpay_Model_Cart::STATE_CANCELED :
+					if ($orderModel != null) {
+						$orderModel->cancel ();
+						$orderModel->save ();
+					}
+					$cart->setState ( $status );
+					$cart->save ();
+					break;
+			}
 		}
 	}
 }

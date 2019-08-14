@@ -2,18 +2,18 @@
 <config>
 	<modules>
 		<Dhl_MeinPaketCommon>
-			<version>1.3.0</version>
+			<version>1.4.0</version>
 		</Dhl_MeinPaketCommon>
 	</modules>
 	<admin>
 		<routers>
-			<meinpaketcommon>
-				<use>admin</use>
+			<adminhtml>
 				<args>
-					<module>Dhl_MeinPaketCommon</module>
-					<frontName>meinpaketcommon</frontName>
+					<modules>
+						<Dhl_MeinPaketCommon after="Mage_Adminhtml">Dhl_MeinPaketCommon_Adminhtml</Dhl_MeinPaketCommon>
+					</modules>
 				</args>
-			</meinpaketcommon>
+			</adminhtml>
 		</routers>
 	</admin>
 	<adminhtml>
@@ -36,25 +36,25 @@
 	</adminhtml>
 	<crontab>
 		<jobs>
-			<meinpaket_processAsyncTasks>
+			<meinpaketcommon_processAsyncTasks>
 				<schedule>
 					<config_path>meinpaket/cron/async</config_path>
 				</schedule>
 				<run>
 					<model>meinpaketcommon/cron::processAsyncTasks</model>
 				</run>
-			</meinpaket_processAsyncTasks>
-			<meinpaket_importOrders>
+			</meinpaketcommon_processAsyncTasks>
+			<meinpaketcommon_importOrders>
 				<schedule>
 					<config_path>meinpaket/cron/order</config_path>
 				</schedule>
 				<run>
 					<model>meinpaketcommon/cron::importOrders</model>
 				</run>
-			</meinpaket_importOrders>
+			</meinpaketcommon_importOrders>
 			<meinpaketcommon_cleanup>
 				<schedule>
-					<config_path>meinpaketcommon/cron/cleanup</config_path>
+					<config_path>meinpaket/cron/cleanup</config_path>
 				</schedule>
 				<run>
 					<model>meinpaketcommon/cron::cleanup</model>
@@ -68,7 +68,7 @@
 				<active>1</active>
 				<model>meinpaketcommon/payment_method_meinpaket</model>
 				<order_status>pending</order_status>
-				<title>MeinPaket</title>
+				<title>Allyouneed</title>
 				<allowspecific>0</allowspecific>
 				<group>offline</group>
 			</meinpaket>
@@ -76,7 +76,7 @@
 				<active>1</active>
 				<model>meinpaketcommon/payment_method_allyouneed</model>
 				<order_status>pending</order_status>
-				<title>MeinPaket</title>
+				<title>Allyouneed</title>
 				<allowspecific>0</allowspecific>
 				<group>offline</group>
 			</allyouneed>

@@ -3,14 +3,14 @@
 /**
  * 
  */
-class Dhl_MeinPaketCommon_Adminhtml_AsyncController extends Mage_Adminhtml_Controller_Action {
+class Dhl_MeinPaketCommon_Adminhtml_Meinpaketcommon_AsyncController extends Mage_Adminhtml_Controller_Action {
 	protected function _initAction() {
 		$this->loadLayout ()->_setActiveMenu ( 'meinpaketcommon/async' )->_addBreadcrumb ( Mage::helper ( 'meinpaketcommon' )->__ ( 'Async' ), Mage::helper ( 'meinpaketcommon' )->__ ( 'Async' ) );
 		return $this;
 	}
 	/**
 	 * (non-PHPdoc)
-	 * 
+	 *
 	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
 	 */
 	protected function _isAllowed() {
@@ -78,12 +78,12 @@ class Dhl_MeinPaketCommon_Adminhtml_AsyncController extends Mage_Adminhtml_Contr
 		$cronjob = $this->getRequest ()->getParam ( 'cronjob', 'all' );
 		if ($cronjob == 'all') {
 			return Dhl_MeinPaket_Model_Cron::$CRONJOBS;
-		} else if (in_array ( $cronjob, Dhl_MeinPaket_Model_Cron::$CRONJOBS )) {
+		} else if (in_array ( $cronjob, Dhl_MeinPaketCommon_Model_Cron::$CRONJOBS )) {
 			return array (
 					$cronjob 
 			);
 		}
-		return null;
+		return array ();
 	}
 	
 	/**

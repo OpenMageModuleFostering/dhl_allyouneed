@@ -9,7 +9,7 @@ $installer->addAttribute ( 'catalog_product', 'meinpaket_id', array (
 		'label' => 'Product DHL Allyouneed Id',
 		'required' => false,
 		'global' => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL,
-		'visible' => false,
+		'visible' => true,
 		'group' => 'Allyouneed' 
 ) );
 

@@ -24,8 +24,10 @@ class Dhl_MeinPaketCommon_Shell_OrderImport extends Mage_Shell_Abstract {
 	public function run() {
 		echo "Starting order import (" . $this->getFormattedDate () . ")\n";
 		
-		/* @var $service Dhl_MeinPaket_Model_Service_Order_ImportService */
-		$service = Mage::getModel ( "meinpaketcommon/service_order_importService" );
+		/* @var $service Dhl_MeinPaketCommon_Model_Service_Order_ImportService */
+		$service = Mage::getSingleton ( 'meinpaketcommon/service_order_importService' );
+		$service->getOrderCount ();
+		
 		$hours = self::DEFAULT_HOURS;
 		$startTime = 0;
 		$endTime = 0;
@@ -51,8 +53,8 @@ class Dhl_MeinPaketCommon_Shell_OrderImport extends Mage_Shell_Abstract {
 			echo 'Order import failed. Exception occured: ' . $e->getMessage ();
 		}
 		
-		echo "Import finished       (" . $this->getFormattedDate () . ")\n";
-		echo "Imported " . $service->getOrderCount ()['imported'] . " orders.\n";
+		echo "Import finished (" . $this->getFormattedDate () . ")\n";
+		echo "Imported " . $service->getOrderCount () ['imported'] . " orders.\n";
 		
 		return $this;
 	}

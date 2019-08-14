@@ -9,7 +9,7 @@
  * @subpackage	Model_Entity_Attribute_Source
  * @version		$Id$
  */
-class Dhl_MeinPaket_Model_Entity_Attribute_Source_Taxclass extends Mage_Eav_Model_Entity_Attribute_Abstract {
+class Dhl_MeinPaket_Model_Entity_Attribute_Source_Taxclass extends Mage_Eav_Model_Entity_Attribute_Source_Abstract {
 	/**
 	 * returns tax classes from database
 	 *
@@ -22,11 +22,11 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_Taxclass extends Mage_Eav_Mode
 		$table_prefix = Mage::getConfig ()->getTablePrefix ();
 		
 		$result = $db->query ( "
-      SELECT class_id, class_name
-      FROM {$table_prefix}tax_class
-      WHERE class_type = 'PRODUCT'
-      ORDER BY class_id
-    " );
+				SELECT class_id, class_name
+				FROM {$table_prefix}tax_class
+				WHERE class_type = 'PRODUCT'
+				ORDER BY class_id
+				" );
 		
 		if ($result) {
 			while ( $row = $result->fetch ( PDO::FETCH_ASSOC ) ) {
@@ -46,6 +46,19 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_Taxclass extends Mage_Eav_Mode
 	 */
 	public function toOptionArray() {
 		return $this->getTaxClasses ();
+	}
+	
+	/**
+	 * Retrieve All options
+	 *
+	 * @return array
+	 */
+	public function getAllOptions() {
+		if (is_null ( $this->_options )) {
+			$this->_options = $this->getTaxClasses ();
+		}
+		
+		return $this->_options;
 	}
 }
 

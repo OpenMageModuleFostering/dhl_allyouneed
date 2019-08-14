@@ -3,7 +3,7 @@
 /**
  *
  */
-class Dhl_MeinPaket_Adminhtml_MatchingController extends Mage_Adminhtml_Controller_Action {
+class Dhl_MeinPaket_Adminhtml_Meinpaket_MatchingController extends Mage_Adminhtml_Controller_Action {
 	/**
 	 * (non-PHPdoc)
 	 * 

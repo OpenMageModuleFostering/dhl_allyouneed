@@ -79,6 +79,10 @@ class Dhl_MeinPaketCommon_Model_Observer {
 	public function salesOrderSaveAfter(Varien_Event_Observer $observer) {
 		$order = $observer->getData ( 'order' );
 		
+		if ($order == null) {
+			return $this;
+		}
+		
 		self::setCurrentOrderId ( $order->getId () );
 		
 		$this->_updateMeinPaketOrderId ( $order );
@@ -311,6 +315,10 @@ class Dhl_MeinPaketCommon_Model_Observer {
 		/* @var $shipment Mage_Sales_Model_Order_Shipment */
 		$shipment = $observer->getData ( 'shipment' );
 		
+		if ($shipment == null) {
+			return $this;
+		}
+		
 		self::setCurrentOrderId ( $shipment->getOrder ()->getId () );
 		
 		if ($shipmentHelper->isExportedToDhlMeinPaket ( $shipment )) {
@@ -341,6 +349,10 @@ class Dhl_MeinPaketCommon_Model_Observer {
 		
 		/* @var $shipment Mage_Sales_Model_Order_Shipment */
 		$shipment = $observer->getShipment ();
+		
+		if ($shipment == null) {
+			return $this;
+		}
 		
 		self::setCurrentOrderId ( $shipment->getOrder ()->getId () );
 		
@@ -411,6 +423,10 @@ class Dhl_MeinPaketCommon_Model_Observer {
 	public function salesOrderCreditmemoSaveAfter(Varien_Event_Observer $observer) {
 		/* @var $creditmemo Mage_Sales_Model_Order_Creditmemo */
 		$creditmemo = $observer->getData ( 'creditmemo' );
+		
+		if ($creditmemo == null || $creditmemo->getOrder () == null) {
+			return $this;
+		}
 		
 		self::setCurrentOrderId ( $creditmemo->getOrder ()->getId () );
 		

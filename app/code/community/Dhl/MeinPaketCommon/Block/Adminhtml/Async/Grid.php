@@ -51,14 +51,14 @@ class Dhl_MeinPaketCommon_Block_Adminhtml_Async_Grid extends Mage_Adminhtml_Bloc
 		$this->getMassactionBlock ()->setFormFieldName ( 'asyncIds' );
 		$this->getMassactionBlock ()->addItem ( 'delete', array (
 				'label' => Mage::helper ( 'meinpaketcommon' )->__ ( 'Delete' ),
-				'url' => $this->getUrl ( '*/*/massDelete', array () ),
+				'url' => $this->getUrl ( 'adminhtml/meinpaketcommon_async/massDelete', array () ),
 				'confirm' => Mage::helper ( 'meinpaketcommon' )->__ ( 'Are you sure?' ) 
 		) );
 		
 		return $this;
 	}
 	public function getGridUrl() {
-		return $this->getUrl ( '*/*/grid', array (
+		return $this->getUrl ( 'adminhtml/meinpaketcommon_async/grid', array (
 				'_current' => true 
 		) );
 	}

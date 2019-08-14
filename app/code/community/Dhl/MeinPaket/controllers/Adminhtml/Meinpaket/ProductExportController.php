@@ -8,7 +8,7 @@
  * @subpackage	Adminhtml
  * @version		$Id$
  */
-class Dhl_MeinPaket_Adminhtml_ProductExportController extends Mage_Adminhtml_Controller_Action {
+class Dhl_MeinPaket_Adminhtml_Meinpaket_ProductExportController extends Mage_Adminhtml_Controller_Action {
 	/**
 	 *
 	 * @var integer
@@ -42,7 +42,7 @@ class Dhl_MeinPaket_Adminhtml_ProductExportController extends Mage_Adminhtml_Con
 	
 	/**
 	 * (non-PHPdoc)
-	 * 
+	 *
 	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
 	 */
 	protected function _isAllowed() {

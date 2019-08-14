@@ -42,6 +42,12 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 	
 	/**
 	 *
+	 * @var Mage_Core_Helper_Data
+	 */
+	protected $coreHelper = null;
+	
+	/**
+	 *
 	 * @var Dhl_MeinPaketCommon_Helper_Product
 	 */
 	protected $productHelper = null;
@@ -59,6 +65,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 		parent::__construct ();
 		$this->productHelper = Mage::helper ( 'meinpaketcommon/product' );
 		$this->dataHelper = Mage::helper ( 'meinpaketcommon/data' );
+		$this->coreHelper = Mage::helper ( 'core/data' );
 	}
 	
 	/**
@@ -108,25 +115,15 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 		
 		$meinPaketId = $product->getData ( 'meinpaket_id' );
 		
-		// ean
-		if (strlen ( $meinPaketId ) <= 0 && $complete) {
-			$ean = $this->productHelper->getEan ( $product );
-			if (! empty ( $ean )) {
-				$offer->appendChild ( $this->getDocument ()->createElement ( 'common:ean', $ean ) );
-			}
-			
-			// manufacturer
-			$manufacturer = $product->getAttributeText ( 'manufacturer' );
-			if (! empty ( $manufacturer )) {
-				$offer->appendChild ( $this->getCDATANode ( 'common:manufacturerName', $manufacturer ) );
-			}
-		}
-		
 		// price
 		// Use final price to use timing
 		$price = Mage::getStoreConfigFlag ( 'meinpaket/product_attributes/use_available_special_price' ) && $product->getFinalPrice () > 0 ? $product->getFinalPrice () : $product->getPrice ();
 		$priceWithTax = Mage::helper ( 'tax' )->getPrice ( $product, $price );
 		$offer->appendChild ( $this->getDocument ()->createElement ( 'price', $priceWithTax ) );
+		
+		if ($this->coreHelper->isModuleEnabled ( 'DerModPro_BasePrice' )) {
+			$this->addDerModProBasePrice ( $offer, $product, $priceWithTax );
+		}
 		
 		// tax group
 		$taxGroup = $this->productHelper->getMeinPaketTaxGroup ( $product );
@@ -166,7 +163,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 				}
 			}
 			
-			$this->exportAttributes ( $product, $offer, $configurableProduct );
+			$this->exportAttributes ( $product, $offer, $this->productHelper->getConfigurableAttributes ( $configurableProduct ) );
 		}
 		
 		$this->getOffers ()->appendChild ( $offer );
@@ -174,6 +171,12 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 		
 		return $offer;
 	}
+	
+	/**
+	 * Remove given product.
+	 *
+	 * @param unknown $product        	
+	 */
 	public function removeProduct(Mage_Catalog_Model_Product $product) {
 		if ($product->getData ( 'meinpaket_id' )) {
 			/* @var $productDeletion DOMNode */
@@ -185,11 +188,113 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 			$this->setHasData ();
 		}
 	}
+	
+	/**
+	 * Add category
+	 * TODO:
+	 *
+	 * @param unknown $product        	
+	 */
 	public function addCategory(Mage_Catalog_Model_Product $product) {
-		// TODO:
 	}
+	
+	/**
+	 * Remove category
+	 * TODO:
+	 *
+	 * @param unknown $product        	
+	 */
 	public function removeCategory(Mage_Catalog_Model_Product $product) {
-		// TODO:
+	}
+	
+	/**
+	 * Add baseprice using DerModPro_BasePrice
+	 *
+	 * @param DOMElement $offer
+	 *        	to add baseprice to
+	 * @param Mage_Catalog_Product $product
+	 *        	to get baseprice for
+	 * @param unknown $productPrice
+	 *        	to use
+	 */
+	protected function addDerModProBasePrice(DOMElement $offer, Mage_Catalog_Model_Product $product, $productPrice) {
+		if (! ($productAmount = $product->getBasePriceAmount ())) {
+			return;
+		}
+		
+		if (! ($referenceAmount = $product->getBasePriceBaseAmount ())) {
+			return;
+		}
+		
+		if (! ($productPrice)) {
+			return;
+		}
+		
+		if (! is_numeric ( $productAmount ) || ! is_numeric ( $referenceAmount ) || ! is_numeric ( $productPrice )) {
+			return;
+		}
+		
+		/* @var $basePriceHelper DerModePro_BasePrice_Helper_Data */
+		$basePriceHelper = Mage::helper ( 'baseprice/data' );
+		
+		$productUnit = $product->getBasePriceUnit ();
+		$referenceUnit = $product->getBasePriceBaseUnit ();
+		$unit = null;
+		
+		switch ($referenceUnit) {
+			case 'PCS' :
+				$unit = 'per_piece';
+				$referenceAmount = 1;
+				break;
+			case 'KG' :
+			case 'LB' :
+				$unit = 'per_1kg';
+				$referenceAmount = 1;
+				break;
+			case 'G' :
+				$unit = 'per_100g';
+				$referenceAmount = 100;
+				break;
+			case 'L' :
+				$unit = 'per_1l';
+				$referenceAmount = 1;
+				break;
+			case 'ML' :
+				$unit = 'per_100ml';
+				$referenceAmount = 100;
+				break;
+			case 'MM' :
+			case 'CM' :
+			case 'IN' :
+			case 'M' :
+				$unit = 'per_1m';
+				$referenceAmount = 1;
+				break;
+			case 'SQM' :
+				$unit = 'per_1m2';
+				$referenceAmount = 1;
+				break;
+			case 'CBM' :
+				$unit = 'per_1m3';
+				$referenceUnit = 1;
+				break;
+		}
+		
+		if (! $unit) {
+			return;
+		}
+		
+		/* @var $basePriceModel DerModePro_BasePrice_Model_BasePrice */
+		$basePriceModel = Mage::getModel ( 'baseprice/baseprice', array (
+				'reference_unit' => $referenceUnit,
+				'reference_amount' => $referenceAmount 
+		) );
+		
+		$unitPrice = round ( $basePriceModel->getBasePrice ( $productAmount, $productUnit, $productPrice ), 2 );
+		
+		$unitPriceElement = $this->getDocument ()->createElement ( 'unitprice', $unitPrice );
+		$unitPriceElement->setAttribute ( 'unit', $unit );
+		$offer->appendChild ( $unitPriceElement );
 	}
 	protected function getProductDescriptions() {
 		if ($this->productDescriptions == null) {
@@ -289,14 +394,23 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 			}
 		}
 		
-		if (! $this->productHelper->isActive ( $product ) && $configurableProduct == null) {
+		$configurableProductFallback = Mage::getStoreConfigFlag ( 'meinpaket/product_attributes/configurable_product_fallback' );
+		$includeConfigurableProductImages = Mage::getStoreConfigFlag ( 'meinpaket/product_attributes/include_configurable_product_images' );
+		
+		$meinpaketCategory = $product->getData ( 'meinpaket_category' );
+		if (empty ( $meinpaketCategory ) && $configurableProductFallback && $configurableProduct != null) {
+			$meinpaketCategory = $configurableProduct->getData ( 'meinpaket_category' );
+		}
+		
+		if (! $this->productHelper->isActive ( $product ) || empty ( $meinpaketCategory )) {
 			$this->removeProduct ( $product );
 			return false;
 		}
 		
+		$variantInfo = null;
+		
 		/* @var $productDescription DOMNode */
 		$productDescription = $this->getDocument ()->createElement ( 'productDescription' );
-		$variantInfo = null;
 		
 		// product id
 		$productId = $this->getDocument ()->createElement ( 'common:productId', $product->getId () );
@@ -314,34 +428,78 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 			$productDescription->appendChild ( $this->getCDATANode ( 'common:manufacturerName', $manufacturer ) );
 		}
 		
-		if ($configurableProduct != NULL) {
+		$configurableAttributes = array ();
+		
+		if ($configurableProduct != NULL && ! empty ( $configurableAttributes )) {
+			$configurableAttributes = $this->productHelper->getConfigurableAttributes ( $configurableProduct );
 			$variantGroupInfoNode = $this->getDocument ()->createElement ( "variantGroupInfo" );
 			$variantGroupInfoNode->setAttribute ( "code", $configurableProduct->getId () );
 			$productDescription->appendChild ( $variantGroupInfoNode );
 		}
 		
 		// name
-		if (strlen ( $product->getName () ) > 0) {
+		$name = $product->getName ();
+		if (empty ( $name ) && $configurableProductFallback && $configurableProduct != null) {
+			$shortDescription = $this->escapeStringForMeinPaket ( $configurableProduct->getName () );
+		}
+		
+		if (! empty ( $name )) {
 			$productDescription->appendChild ( $this->getCDATANode ( 'name', $product->getName () ) );
 		} else {
 			throw new Dhl_MeinPaketCommon_Model_Exception_InvalidDataException ( $product->getId (), 'name' );
 		}
 		
 		// shortdescription
-		if (strlen ( $product->getShortDescription () ) > 0) {
-			$shortDescription = $this->escapeStringForMeinPaket ( $product->getShortDescription () );
+		$shortDescription = $this->escapeStringForMeinPaket ( $product->getShortDescription () );
+		
+		if (empty ( $shortDescription ) && $configurableProductFallback && $configurableProduct != null) {
+			$shortDescription = $this->escapeStringForMeinPaket ( $configurableProduct->getShortDescription () );
+		}
+		
+		if (! empty ( $shortDescription )) {
 			$productDescription->appendChild ( $this->getCDATANode ( 'shortDescription', $shortDescription ) );
 		} else {
 			throw new Dhl_MeinPaketCommon_Model_Exception_MissingDataException ( $product->getId (), 'shortDescription' );
 		}
 		
 		// long description (optional) && (strlen > 0)
-		if (strlen ( $product->getDescription () ) > 0) {
-			$description = $this->escapeStringForMeinPaket ( $product->getDescription () );
+		$description = $this->escapeStringForMeinPaket ( $product->getDescription () );
+		if (empty ( $description ) && $configurableProductFallback && $configurableProduct != null) {
+			$description = $this->escapeStringForMeinPaket ( $configurableProduct->getDescription () );
+		}
+		
+		if (! empty ( $description )) {
 			$productDescription->appendChild ( $this->getCDATANode ( 'longDescription', $description ) );
 		}
 		
+		// image
+		if (((! $this->exportImage ( $product, $productDescription ) && $configurableProductFallback) || $includeConfigurableProductImages) && $configurableProduct != null) {
+			$this->exportImage ( $configurableProduct, $productDescription );
+		}
+		
+		// marketplace category
+		$mNode = $this->getDocument ()->createElement ( 'marketplaceCategory' );
+		$mNode->setAttribute ( 'code', $meinpaketCategory );
+		$productDescription->appendChild ( $mNode );
+		
+		$this->exportAttributes ( $product, $productDescription, $configurableAttributes );
+		$this->getProductDescriptions ()->appendChild ( $productDescription );
+		$this->addOffer ( $product, $configurableProduct, false );
+		
+		$this->setHasData ();
+		
+		return $productDescription;
+	}
+	
+	/**
+	 *
+	 * @param Mage_Catalog_Model_Product $product        	
+	 * @param unknown $productDescription        	
+	 */
+	protected function exportImage(Mage_Catalog_Model_Product $product, $productDescription) {
 		// Export images
+		$imagesExported = false;
+		
 		$images = $product->getMediaGalleryImages ();
 		if ($images != null) {
 			foreach ( $images as $image ) {
@@ -355,6 +513,8 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 				$productDescription->appendChild ( $imageNode );
 				$imageNode->appendChild ( $this->getDocument ()->createElement ( "url", $image->getUrl () ) );
 				
+				$imagesExported = true;
+				
 				$label = $image->getLabel ();
 				if (! empty ( $label )) {
 					$imageNode->appendChild ( $this->getDocument ()->createElement ( "caption", $image->getLabel () ) );
@@ -362,37 +522,13 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_UploadRequest extends Dhl_MeinPaketC
 			}
 		}
 		
-		// marketplace category
-		$meinpaketCategory = $product->getData ( 'meinpaket_category' );
-		if (strlen ( $meinpaketCategory ) > 0) {
-			$mNode = $this->getDocument ()->createElement ( 'marketplaceCategory' );
-			$mNode->setAttribute ( 'code', $meinpaketCategory );
-			$productDescription->appendChild ( $mNode );
-		} else {
-			throw new Dhl_MeinPaketCommon_Model_Exception_MissingDataException ( $product->getId (), 'dhl_marketplace_category_id' );
-		}
-		
-		$this->exportAttributes ( $product, $productDescription, $configurableProduct );
-		$this->getProductDescriptions ()->appendChild ( $productDescription );
-		$this->addOffer ( $product, $configurableProduct, false );
-		
-		$this->setHasData ();
-		
-		return $productDescription;
+		return $imagesExported;
 	}
 	
 	/**
 	 * Export product attributes.
 	 */
-	protected function exportAttributes(Mage_Catalog_Model_Product $product, DOMNode $node, Mage_Catalog_Model_Product $configurableProduct = null) {
-		$configurableAttributes = array ();
-		
-		if ($configurableProduct != null && $configurableProduct->getTypeId () == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE) {
-			foreach ( $configurableProduct->getTypeInstance ( true )->getConfigurableAttributes ( $configurableProduct ) as $attr ) {
-				$configurableAttributes [] = $attr->getProductAttribute ()->getAttributeCode ();
-			}
-		}
-		
+	protected function exportAttributes(Mage_Catalog_Model_Product $product, DOMNode $node, array $configurableAttributes = array()) {
 		foreach ( $product->getAttributes () as $attribute ) {
 			/* @var $attribute Mage_Eav_Model_Attribute */
 			

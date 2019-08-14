@@ -9,7 +9,7 @@
  * @subpackage	Model_Entity_Attribute_Source
  * @version		$Id$
  */
-class Dhl_MeinPaket_Model_Entity_Attribute_Source_Taxrate extends Mage_Eav_Model_Entity_Attribute_Abstract {
+class Dhl_MeinPaket_Model_Entity_Attribute_Source_Taxrate extends Mage_Eav_Model_Entity_Attribute_Source_Abstract {
 	/**
 	 * returns tax rates from database
 	 *
@@ -22,10 +22,10 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_Taxrate extends Mage_Eav_Model
 		$table_prefix = Mage::getConfig ()->getTablePrefix ();
 		
 		$result = $db->query ( "
-      SELECT tax_calculation_rate_id, rate
-      FROM {$table_prefix}tax_calculation_rate
-      ORDER BY tax_calculation_rate_id
-    " );
+				SELECT tax_calculation_rate_id, rate
+				FROM {$table_prefix}tax_calculation_rate
+				ORDER BY tax_calculation_rate_id
+				" );
 		
 		if ($result) {
 			while ( $row = $result->fetch ( PDO::FETCH_ASSOC ) ) {
@@ -45,5 +45,18 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_Taxrate extends Mage_Eav_Model
 	 */
 	public function toOptionArray() {
 		return $this->getTaxRates ();
+	}
+	
+	/**
+	 * Retrieve All options
+	 *
+	 * @return array
+	 */
+	public function getAllOptions() {
+		if (is_null ( $this->_options )) {
+			$this->_options = $this->getTaxRates ();
+		}
+		
+		return $this->_options;
 	}
 }

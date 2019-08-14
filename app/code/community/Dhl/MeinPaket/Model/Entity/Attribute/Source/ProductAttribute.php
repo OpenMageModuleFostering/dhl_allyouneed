@@ -9,7 +9,7 @@
  * @subpackage	Model_Entity_Attribute_Source
  * @version		$Id$
  */
-class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductAttribute extends Mage_Eav_Model_Entity_Attribute_Abstract {
+class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductAttribute extends Mage_Eav_Model_Entity_Attribute_Source_Abstract {
 	protected $attributes;
 	public function __construct() {
 		$this->attributes = array (
@@ -39,5 +39,18 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductAttribute extends Mage_
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Retrieve All options
+	 *
+	 * @return array
+	 */
+	public function getAllOptions() {
+		if (is_null ( $this->_options )) {
+			$this->_options = $this->attributes;
+		}
+		
+		return $this->_options;
 	}
 }

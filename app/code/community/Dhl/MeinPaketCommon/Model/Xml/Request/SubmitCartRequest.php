@@ -35,6 +35,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_SubmitCartRequest extends Dhl_MeinPa
 	}
 	
 	/**
+	 * Add cart.
 	 *
 	 * @param Mage_Sales_Model_Order|Mage_Sales_Model_Quote $order        	
 	 * @param Dhl_Paypal_Model_Cart $cart        	
@@ -88,7 +89,14 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_SubmitCartRequest extends Dhl_MeinPa
 		
 		return $cart->getNotificationId ();
 	}
-	protected function addCartItem(DOMElement $shoppingCartNode, Mage_Sales_Model_Order_Item $item) {
+	
+	/**
+	 * Add cart item.
+	 *
+	 * @param DOMElement $shoppingCartNode        	
+	 * @param Mage_Sales_Model_Order_Item|Mage_Sales_Model_Quote_Item $item        	
+	 */
+	protected function addCartItem(DOMElement $shoppingCartNode, $item) {
 		if (! Mage::helper ( 'meinpaketcommon/data' )->checkItem ( $item )) {
 			return;
 		}
@@ -115,10 +123,18 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_SubmitCartRequest extends Dhl_MeinPa
 		$shoppingCartNode->appendChild ( $shoppingCartItemNode );
 		$this->setHasData ( true );
 	}
+	
+	/**
+	 * Add customer address
+	 *
+	 * @param DOMElement $shoppingCartNode        	
+	 * @param Mage_Sales_Model_Order $order        	
+	 */
 	protected function addCustomerData(DOMElement $shoppingCartNode, Mage_Sales_Model_Order $order) {
 		$customerDataNode = $this->getDocument ()->createElement ( 'customerData' );
 		
-		$emailNode = $this->getDocument ()->createElement ( 'email', $this->getCDATANode ( 'email', $order->getCustomerEmail () ) );
+		$emailNode = $this->getCDATANode ( 'email', $order->getCustomerEmail () );
+		$customerDataNode->appendChild ( $emailNode );
 		
 		if ($order->getShippingAddressId () != $order->getBillingAddressId ()) {
 			$deliveryAddressNode = $this->getDocument ()->createElement ( 'deliveryAddress' );
@@ -132,6 +148,13 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_SubmitCartRequest extends Dhl_MeinPa
 		
 		$shoppingCartNode->appendChild ( $customerDataNode );
 	}
+	
+	/**
+	 * Add customer address fields.
+	 *
+	 * @param DOMElement $addressNode        	
+	 * @param Mage_Sales_Model_Order_Address $address        	
+	 */
 	protected function addCustomerAddressFields(DOMElement $addressNode, Mage_Sales_Model_Order_Address $address) {
 		$streetHouseNumber = Mage::helper ( 'meinpaketcommon/address' )->parseStreetHouseNumber ( $address->getStreet1 () );
 		

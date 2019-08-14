@@ -24,10 +24,10 @@ class Dhl_MeinPaketCommon_Block_Adminhtml_Log_Grid extends Mage_Adminhtml_Block_
 				'header' => Mage::helper ( 'meinpaketcommon' )->__ ( 'Request ID' ),
 				'index' => 'request_id' 
 		) );
-
+		
 		$this->addColumn ( 'url', array (
 				'header' => Mage::helper ( 'meinpaketcommon' )->__ ( 'URL' ),
-				'index' => 'url'
+				'index' => 'url' 
 		) );
 		
 		$this->addColumn ( 'send', array (
@@ -60,14 +60,14 @@ class Dhl_MeinPaketCommon_Block_Adminhtml_Log_Grid extends Mage_Adminhtml_Block_
 		$this->getMassactionBlock ()->setFormFieldName ( 'logIds' );
 		$this->getMassactionBlock ()->addItem ( 'delete', array (
 				'label' => Mage::helper ( 'meinpaketcommon' )->__ ( 'Delete' ),
-				'url' => $this->getUrl ( '*/*/massDelete', array () ),
+				'url' => $this->getUrl ( 'adminhtml/meinpaketcommon_log/massDelete', array () ),
 				'confirm' => Mage::helper ( 'meinpaketcommon' )->__ ( 'Are you sure?' ) 
 		) );
 		
 		return $this;
 	}
 	public function getGridUrl() {
-		return $this->getUrl ( '*/*/grid', array (
+		return $this->getUrl ( 'adminhtml/meinpaketcommon_log/grid', array (
 				'_current' => true 
 		) );
 	}

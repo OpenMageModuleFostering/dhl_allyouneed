@@ -6,11 +6,11 @@
 			<children>
 				<log translate="title" module="meinpaketcommon">
 					<title>Log</title>
-					<action>meinpaketcommon/adminhtml_log</action>
+					<action>adminhtml/meinpaketcommon_log</action>
 				</log>
 				<async translate="title" module="meinpaketcommon">
 					<title>Async</title>
-					<action>meinpaketcommon/adminhtml_async</action>
+					<action>adminhtml/meinpaketcommon_async</action>
 				</async>
 			</children>
 			<sort_order>90</sort_order>

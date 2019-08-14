@@ -2,18 +2,18 @@
 <config>
 	<modules>
 		<Dhl_Postpay>
-			<version>1.2.0</version>
+			<version>1.3.0</version>
 		</Dhl_Postpay>
 	</modules>
 	<admin>
 		<routers>
-			<postpay>
-				<use>admin</use>
+			<adminhtml>
 				<args>
-					<module>Dhl_Postpay</module>
-					<frontName>postpay</frontName>
+					<modules>
+						<Dhl_Postpay after="Mage_Adminhtml">Dhl_Postpay_Adminhtml</Dhl_Postpay>
+					</modules>
 				</args>
-			</postpay>
+			</adminhtml>
 		</routers>
 	</admin>
 	<adminhtml>

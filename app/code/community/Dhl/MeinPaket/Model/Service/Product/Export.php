@@ -69,8 +69,7 @@ class Dhl_MeinPaket_Model_Service_Product_Export extends Dhl_MeinPaketCommon_Mod
 						$seenMagentoProducts [$productId] = true;
 						
 						/* @var $product Mage_Catalog_Model_Product */
-						$product = Mage::getModel ( 'catalog/product' )->setStoreId(
-								Mage::helper('meinpaketcommon/data')->getMeinPaketStoreId())->load ( $productId );
+						$product = Mage::getModel ( 'catalog/product' )->setStoreId ( Mage::helper ( 'meinpaketcommon/data' )->getMeinPaketStoreId () )->load ( $productId );
 						
 						$syncMode = $product->getData ( 'sync_with_dhl_mein_paket' );
 						
@@ -79,7 +78,11 @@ class Dhl_MeinPaket_Model_Service_Product_Export extends Dhl_MeinPaketCommon_Mod
 								$uploadRequest->addProductDescription ( $product );
 								break;
 							case Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductSyncMode::OFFER :
-								$uploadRequest->addOffer ( $product );
+								if ($productBacklog->getRequestDescriptionUpload ()) {
+									$uploadRequest->addProductDescription ( $product );
+								} else {
+									$uploadRequest->addOffer ( $product );
+								}
 								break;
 							default :
 								$uploadRequest->removeProduct ( $product );
@@ -111,7 +114,7 @@ class Dhl_MeinPaket_Model_Service_Product_Export extends Dhl_MeinPaketCommon_Mod
 		
 		if ($currentPage < $pages) {
 			Mage::helper ( 'meinpaket/cron' )->scheduleJobs ( array (
-					Dhl_MeinPaket_Model_Cron::SYNC_ASYNC 
+					Dhl_MeinPaketCommon_Model_Cron::SYNC_ASYNC 
 			), false );
 		}
 		
@@ -136,6 +139,6 @@ class Dhl_MeinPaket_Model_Service_Product_Export extends Dhl_MeinPaketCommon_Mod
 			$response = $client->send ( $uploadRequest, true );
 		}
 		
-		return Mage::helper ( 'meinpaket/data' )->__ ( "Processed %d products", $count );
+		return Mage::helper ( 'meinpaket/data' )->__ ( "Deleted %d products", 1 );
 	}
 }

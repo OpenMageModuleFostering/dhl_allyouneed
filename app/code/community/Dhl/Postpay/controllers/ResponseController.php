@@ -2,11 +2,7 @@
 class Dhl_Postpay_ResponseController extends Mage_Core_Controller_Front_Action {
 	
 	/**
-	 * When paypal returns
-	 * The order information at this point is in POST
-	 * variables.
-	 * However, you don't want to "process" the order until you
-	 * get validation from the api.
+	 * When postpay returns.
 	 */
 	public function successAction() {
 		Mage::log ( 'Called custom ' . __METHOD__ );

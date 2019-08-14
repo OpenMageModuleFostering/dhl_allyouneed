@@ -8,7 +8,7 @@
  * @subpackage	Model_Entity_Attribute_Source
  * @version		$Id$
  */
-class Dhl_MeinPaket_Model_Entity_Attribute_Source_Carrier extends Mage_Eav_Model_Entity_Attribute_Abstract {
+class Dhl_MeinPaket_Model_Entity_Attribute_Source_Carrier extends Mage_Eav_Model_Entity_Attribute_Source_Abstract {
 	/**
 	 * Returns the available shipment methods.
 	 *
@@ -46,6 +46,19 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_Carrier extends Mage_Eav_Model
 	 */
 	public function toOptionArray() {
 		return $this->getActiveShipmentCarriers ();
+	}
+	
+	/**
+	 * Retrieve All options
+	 *
+	 * @return array
+	 */
+	public function getAllOptions() {
+		if (is_null ( $this->_options )) {
+			$this->_options = $this->getActiveShipmentCarriers ();
+		}
+		
+		return $this->_options;
 	}
 }
 

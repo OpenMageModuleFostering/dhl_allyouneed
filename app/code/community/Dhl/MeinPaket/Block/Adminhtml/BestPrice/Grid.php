@@ -81,7 +81,7 @@ class Dhl_MeinPaket_Block_Adminhtml_BestPrice_Grid extends Mage_Adminhtml_Block_
 		) );
 	}
 	public function getGridUrl() {
-		return $this->getUrl ( '*/*/grid', array (
+		return $this->getUrl ( 'adminhtml/meinpaket_bestPrice/grid', array (
 				'_current' => true 
 		) );
 	}

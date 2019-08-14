@@ -74,7 +74,9 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_NotificationRequest extends Dhl_Mein
 		$orderIdNode = $this->getDocument ()->createElement ( 'orderId', $order->getDhlMeinPaketOrderId () );
 		$consignmentNode->appendChild ( $orderIdNode );
 		
-		$consignmentIdNode = $this->getDocument ()->createElement ( 'consignmentId', $shipment->getId () );
+		$consignmentId = $order->getId () . '_' . $shipment->getId () . '_' . microtime ();
+		
+		$consignmentIdNode = $this->getDocument ()->createElement ( 'consignmentId', $consignmentId );
 		$consignmentNode->appendChild ( $consignmentIdNode );
 		
 		if ($trackingNumber == null) {
@@ -97,7 +99,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_NotificationRequest extends Dhl_Mein
 			$consignmentEntryNode->appendChild ( $this->getDocument ()->createElement ( 'quantity', ( int ) $item->getQty () ) );
 		}
 		
-		$this->setHasData();
+		$this->setHasData ();
 		
 		return $this;
 	}
@@ -117,7 +119,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_NotificationRequest extends Dhl_Mein
 		$trackingIdNode = $this->getDocument ()->createElement ( 'trackingId', $trackingNumber->getNumber () );
 		$trackingNumberNode->appendChild ( $trackingIdNode );
 		
-		$this->setHasData();
+		$this->setHasData ();
 		
 		return $this;
 	}
@@ -137,7 +139,9 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_NotificationRequest extends Dhl_Mein
 		$orderIdNode = $this->getDocument ()->createElement ( 'orderId', $order->getData ( 'dhl_mein_paket_order_id' ) );
 		$cancellationNode->appendChild ( $orderIdNode );
 		
-		$consignmentIdNode = $this->getDocument ()->createElement ( 'consignmentId', $order->getId () . ' ' . microtime () );
+		$consignmentId = $order->getId () . '_' . microtime ();
+		
+		$consignmentIdNode = $this->getDocument ()->createElement ( 'consignmentId', $consignmentId );
 		$cancellationNode->appendChild ( $consignmentIdNode );
 		
 		foreach ( $order->getAllItems () as $orderItem ) {
@@ -154,7 +158,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_NotificationRequest extends Dhl_Mein
 			$cancellationEntryNode->appendChild ( $reasonNode );
 		}
 		
-		$this->setHasData();
+		$this->setHasData ();
 		
 		return $this;
 	}
@@ -171,7 +175,11 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_NotificationRequest extends Dhl_Mein
 		$creditMemoNode = $this->getDocument ()->createElement ( 'creditMemo' );
 		$this->getCredits ()->appendChild ( $creditMemoNode );
 		
-		$consignmentIdNode = $this->getDocument ()->createElement ( 'consignmentId', $shipment->getId () );
+		$order = $shipment->getOrder ();
+		
+		$consignmentId = $order->getId () . '_' . $shipment->getId () . '_' . microtime ();
+		
+		$consignmentIdNode = $this->getDocument ()->createElement ( 'consignmentId', $consignmentId );
 		$creditMemoNode->appendChild ( $consignmentIdNode );
 		
 		$orderIdNode = $this->getDocument ()->createElement ( 'orderId', $creditMemo->getOrder ()->getDhlMeinPaketOrderId () );
@@ -186,7 +194,7 @@ class Dhl_MeinPaketCommon_Model_Xml_Request_NotificationRequest extends Dhl_Mein
 		$creditMemoReasonNode = $this->getDocument ()->createElement ( 'creditMemoReason', 'DEALER_GOODWILL' );
 		$creditMemoNode->appendChild ( $creditMemoReasonNode );
 		
-		$this->setHasData();
+		$this->setHasData ();
 		
 		return $this;
 	}

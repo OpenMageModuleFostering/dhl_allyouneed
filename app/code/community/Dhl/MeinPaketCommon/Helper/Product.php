@@ -361,4 +361,22 @@ class Dhl_MeinPaketCommon_Helper_Product extends Mage_Core_Helper_Abstract {
 		
 		return $label;
 	}
+	
+	/**
+	 *
+	 * Get configurable attributes.
+	 * 
+	 * @param Mage_Catalog_Model_Product $configurableProduct        	
+	 */
+	public function getConfigurableAttributes(Mage_Catalog_Model_Product $configurableProduct) {
+		$configurableAttributes = array ();
+		
+		if ($configurableProduct != null && $configurableProduct->getTypeId () == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE) {
+			foreach ( $configurableProduct->getTypeInstance ( true )->getConfigurableAttributes ( $configurableProduct ) as $attr ) {
+				$configurableAttributes [] = $attr->getProductAttribute ()->getAttributeCode ();
+			}
+		}
+		
+		return $configurableAttributes;
+	}
 }

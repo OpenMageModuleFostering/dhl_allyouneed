@@ -84,6 +84,10 @@ class Dhl_MeinPaketCommon_Model_Client_XmlOverHttp extends Varien_Object {
 	 * @return Dhl_MeinPaketCommon_Model_Xml_Response_Abstract
 	 */
 	public function send($xml, $async = false) {
+		/* @var $resource Mage_Core_Model_Resource */
+		//$resource = Mage::getModel('core/resource');
+		//$connection = $resource->getConnection('core_write');
+		
 		$xmlData = $xml instanceof Dhl_MeinPaketCommon_Model_Xml_AbstractXmlPartial ? $xml->__toString () : $xml;
 		
 		$url = $this->endpoint . ($async ? self::ASYNC_SUFFIX : '');

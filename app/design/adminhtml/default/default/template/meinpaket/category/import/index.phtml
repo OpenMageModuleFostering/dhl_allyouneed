@@ -4,7 +4,7 @@
 		<tr>
 			<td><h3 class="icon-head meinpaket"><?php echo __('Import Categories'); ?></h3></td>
 			<td class="a-right">
-				<!-- <button onclick="setLocationWithWait('<?php echo $this->getUrl('meinpaket/adminhtml_categoryImport/import/') ?>')" class="scalable" type="button"><span><?php echo $this->__('import categories'); ?></span></button> -->
+				<!-- <button onclick="setLocationWithWait('<?php echo $this->getUrl('adminhtml/meinpaket_categoryImport/import/') ?>')" class="scalable" type="button"><span><?php echo $this->__('import categories'); ?></span></button> -->
 				<button onclick="startProcessing()" class="scalable" type="button"
 					id="startButton">
 					<span><?php echo $this->__('import categories'); ?></span>
@@ -28,7 +28,7 @@
 		<p><?php echo __('Textual introduction into category import goes here...'); ?></p>
 
 		<form id="allyouneed_form" name="allyouneed_form" method="get"
-			action="<?php echo $this->getUrl('meinpaket/adminhtml_categoryImport/import/') ?>">
+			action="<?php echo $this->getUrl('adminhtml/meinpaket_categoryImport/import/') ?>">
 			<fieldset>
 				<button onclick="startProcessing()" class="scalable" type="button"
 					id="startButton">

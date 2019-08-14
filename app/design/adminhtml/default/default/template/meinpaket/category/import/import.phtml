@@ -1,7 +1,7 @@
 <?php
-/* @var $this Dhl_MeinPaket_Block_Adminhtml_CategoryImport_Import */	
-	/* @var $result Dhl_MeinPaket_Model_Service_MarketplaceCategoryImport_Result */
-	$result = $this->getResult ();
+/* @var $this Dhl_MeinPaket_Block_Adminhtml_CategoryImport_Import */
+/* @var $result Dhl_MeinPaket_Model_Service_MarketplaceCategoryImport_Result */
+$result = $this->getResult ();
 ?>
 <div class="content-header">
 	<table class="grid-header">
@@ -9,7 +9,7 @@
 			<td><h3 class="icon-head allyouneed"><?php echo __('Import Categories'); ?></h3></td>
 			<td class="a-right">
 				<button
-					onclick="setLocation('<?php echo $this->getUrl('meinpaket/adminhtml_categoryImport/index/') ?>')"
+					onclick="setLocation('<?php echo $this->getUrl('adminhtml/meinpaket_categoryImport/index/') ?>')"
 					class="scalable back" type="button">
 					<span><?php echo $this->__('start again'); ?></span>
 				</button>
@@ -94,7 +94,7 @@
 					<th class="header-center">#</th>
 					<th class="col-product" colspan="2"><?php echo __('Category'); ?></th>
 					<th><?php echo __('Category Code'); ?></th>
-					</tr>
+				</tr>
 			<?php
 			$deletedCategories = $result->getDeletedCategories ();
 			$currentIndex = 0;

@@ -18,7 +18,7 @@ class Dhl_Postpay_Model_Cron {
 	 *
 	 * @return NULL
 	 */
-	public function importOrders() {
+	public function cartStatus() {
 		try {
 			return Mage::getSingleton ( 'postpay/service_order_importService' )->importOrders ();
 		} catch ( Exception $e ) {

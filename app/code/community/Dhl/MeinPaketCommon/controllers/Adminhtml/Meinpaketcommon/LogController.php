@@ -3,7 +3,7 @@
 /**
  * 
  */
-class Dhl_MeinPaketCommon_Adminhtml_LogController extends Mage_Adminhtml_Controller_Action {
+class Dhl_MeinPaketCommon_Adminhtml_Meinpaketcommon_LogController extends Mage_Adminhtml_Controller_Action {
 	protected function _initAction() {
 		$this->loadLayout ()->_setActiveMenu ( 'meinpaketcommon/log' )->_addBreadcrumb ( Mage::helper ( 'meinpaketcommon' )->__ ( 'Log' ), Mage::helper ( 'meinpaketcommon' )->__ ( 'Log' ) );
 		return $this;

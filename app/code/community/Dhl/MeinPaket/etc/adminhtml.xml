@@ -6,21 +6,21 @@
 			<children>
 				<backlog translate="title" module="meinpaket">
 					<title>Synchronisation</title>
-					<action>meinpaket/adminhtml_backlog_product</action>
+					<action>adminhtml/meinpaket_backlog_product</action>
 					<depends>
 						<config>meinpaket/credentials/active</config>
 					</depends>
 				</backlog>
 				<category_import translate="title" module="meinpaket">
 					<title>import categories</title>
-					<action>meinpaket/adminhtml_categoryImport</action>
+					<action>adminhtml/meinpaket_categoryImport</action>
 					<depends>
 						<config>meinpaket/credentials/active</config>
 					</depends>
 				</category_import>
 				<bestprice translate="title" module="meinpaket">
 					<title>best prices</title>
-					<action>meinpaket/adminhtml_bestPrice</action>
+					<action>adminhtml/meinpaket_bestPrice</action>
 					<depends>
 						<config>meinpaket/credentials/active</config>
 					</depends>

@@ -86,7 +86,79 @@ class Dhl_MeinPaket_Model_System_Config_Source_Attributes {
 				array (
 						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Cup' ),
 						'value' => 'Cup' 
-				) 
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Department' ),
+						'value' => 'Department'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Sleeve\'s Length' ),
+						'value' => 'Ärmellänge'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Frame' ),
+						'value' => 'Fassung'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Main Material' ),
+						'value' => 'Hauptmaterial'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Country of Manufacture' ),
+						'value' => 'Herstellungsland'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Speed Index' ),
+						'value' => 'Geschwindigkeitsindex'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Height' ),
+						'value' => 'Höhe'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Year' ),
+						'value' => 'Year'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Collection' ),
+						'value' => 'Kollektion'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Collar' ),
+						'value' => 'Kragenform'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Brand' ),
+						'value' => 'Marke'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Subject' ),
+						'value' => 'Motiv'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Optics' ),
+						'value' => 'Optik'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Sets' ),
+						'value' => 'Sets'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Language' ),
+						'value' => 'Sprache'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Style' ),
+						'value' => 'Stil'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Type' ),
+						'value' => 'Typ'
+				),
+				array (
+						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Degree of Grinding' ),
+						'value' => 'Mahlgrad'
+				)
 		);
 	}
 	public function toOptionArray($addEmpty = true) {

@@ -8,12 +8,14 @@ class Dhl_MeinPaket_Helper_Backlog extends Mage_Core_Helper_Abstract {
 	 *        	to create backlog for
 	 * @return integer count
 	 */
-	public function createParentBacklog($productId, $changes = '') {
+	public function createParentBacklog($productId, $changes = '', $requestDescriptionUpload = false) {
 		$count = 0;
 		
 		if ($productId) {
-			foreach ( $this->getParentIds ( $productId ) as $productId ) {
-				$this->createBacklog ( $productId, $changes );
+			$id = is_object ( $productId ) ? $productId->getId () : $productId;
+			
+			foreach ( $this->getParentIds ( $id ) as $productId ) {
+				$this->createBacklog ( $productId, $changes, $requestDescriptionUpload );
 				$count ++;
 			}
 		}
@@ -28,14 +30,16 @@ class Dhl_MeinPaket_Helper_Backlog extends Mage_Core_Helper_Abstract {
 	 *        	to create backlog for
 	 * @return integer count
 	 */
-	public function createChildrenBacklog($productId, $changes = '') {
+	public function createChildrenBacklog($productId, $changes = '', $requestDescriptionUpload = false) {
 		$count = 0;
 		
 		if ($productId) {
-			$childIds = Mage::getModel ( 'catalog/product_type_configurable' )->getChildrenIds ( $productId );
+			$id = is_object ( $productId ) ? $productId->getId () : $productId;
+			
+			$childIds = Mage::getModel ( 'catalog/product_type_configurable' )->getChildrenIds ( $id );
 			
 			foreach ( $childIds [0] as $key => $val ) {
-				$this->createBacklog ( $val, $changes );
+				$this->createBacklog ( $val, $changes, $requestDescriptionUpload );
 				$count ++;
 			}
 		}
@@ -51,12 +55,15 @@ class Dhl_MeinPaket_Helper_Backlog extends Mage_Core_Helper_Abstract {
 	 * @param string $changes
 	 *        	to set
 	 */
-	public function createBacklog($productId, $changes = '') {
+	public function createBacklog($productId, $changes = '', $requestDescriptionUpload = false) {
 		if ($productId) {
+			$id = is_object ( $productId ) ? $productId->getId () : $productId;
+			
 			$backlog = Mage::getModel ( 'meinpaket/backlog_product' );
-			$backlog->product_id = $productId;
+			$backlog->product_id = $id;
 			$backlog->created_at = time ();
 			$backlog->changes = $changes;
+			$backlog->request_description_upload = $requestDescriptionUpload;
 			$backlog->save ();
 		}
 	}
@@ -69,8 +76,10 @@ class Dhl_MeinPaket_Helper_Backlog extends Mage_Core_Helper_Abstract {
 	 * @return array
 	 */
 	public function getParentIds($productId) {
-		$parentIdsGrouped = Mage::getModel ( 'catalog/product_type_grouped' )->getParentIdsByChild ( $productId );
-		$parentIdsConfigurable = Mage::getModel ( 'catalog/product_type_configurable' )->getParentIdsByChild ( $productId );
+		$id = is_object ( $productId ) ? $productId->getId () : $productId;
+		
+		$parentIdsGrouped = Mage::getModel ( 'catalog/product_type_grouped' )->getParentIdsByChild ( $id );
+		$parentIdsConfigurable = Mage::getModel ( 'catalog/product_type_configurable' )->getParentIdsByChild ( $id );
 		return array_unique ( array_merge ( $parentIdsGrouped, $parentIdsConfigurable ) );
 	}
 }

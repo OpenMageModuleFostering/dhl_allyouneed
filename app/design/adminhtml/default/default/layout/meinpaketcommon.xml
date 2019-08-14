@@ -15,21 +15,21 @@
 		</reference>
 	</meinpaket_head_imports>
 
-	<meinpaketcommon_adminhtml_log_index translate="label"
+	<adminhtml_meinpaketcommon_log_index translate="label"
 		module="meinpaketcommon">
 		<update handle="meinpaket_head_imports" />
 		<reference name="content">
 			<block type="meinpaketcommon/adminhtml_log" name="meinpaketcommon_admin_log_grid" />
 		</reference>
-	</meinpaketcommon_adminhtml_log_index>
+	</adminhtml_meinpaketcommon_log_index>
 
-	<meinpaketcommon_adminhtml_async_index translate="label"
+	<adminhtml_meinpaketcommon_async_index translate="label"
 		module="meinpaketcommon">
 		<update handle="meinpaket_head_imports" />
 		<reference name="content">
 			<block type="meinpaketcommon/adminhtml_async" name="meinpaket_admin_async_grid" />
 		</reference>
-	</meinpaketcommon_adminhtml_async_index>
+	</adminhtml_meinpaketcommon_async_index>
 
 	<adminhtml_system_config_edit>
 		<update handle="meinpaket_head_imports" />

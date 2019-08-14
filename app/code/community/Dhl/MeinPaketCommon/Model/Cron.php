@@ -8,11 +8,9 @@
  * @subpackage	Model
  */
 class Dhl_MeinPaketCommon_Model_Cron {
-	const SYNC_CATALOG = 'meinpaket_sync_catalog';
 	const SYNC_ORDERS = 'meinpaket_sync_orders';
 	const SYNC_ASYNC = 'meinpaket_sync_async';
 	public static $CRONJOBS = array (
-			self::SYNC_CATALOG,
 			self::SYNC_ORDERS,
 			self::SYNC_ASYNC 
 	);

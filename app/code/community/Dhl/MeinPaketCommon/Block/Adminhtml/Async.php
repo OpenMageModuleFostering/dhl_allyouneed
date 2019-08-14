@@ -19,8 +19,8 @@ class Dhl_MeinPaketCommon_Block_Adminhtml_Async extends Mage_Adminhtml_Block_Wid
 		
 		$this->_addButton ( 'run_async', array (
 				'label' => Mage::helper ( 'meinpaketcommon' )->__ ( 'Synchronize Async Jobs' ),
-				'onclick' => 'setLocation(\'' . $this->getUrl ( '*/*/run', array (
-						'cronjob' => Dhl_MeinPaket_Model_Cron::SYNC_ASYNC 
+				'onclick' => 'setLocation(\'' . $this->getUrl ( 'adminhtml/meinpaketcommon_async/run', array (
+						'cronjob' => Dhl_MeinPaketCommon_Model_Cron::SYNC_ASYNC 
 				) ) . '\')',
 				'class' => 'add' 
 		) );

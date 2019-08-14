@@ -1,17 +1,24 @@
 <?php
-class Dhl_Postpay_ResponseController extends Mage_Core_Controller_Front_Action {
+
+/**
+ * Controller for notifications.
+ */
+class Dhl_Postpay_NotificationController extends Mage_Core_Controller_Front_Action {
+	/**
+	 * Push notification
+	 */
 	public function pushAction() {
 		// externalCartId=[CartId]&ordered=[ordered]&status=[Status]&notificationId=[notificationId]
-		$cart = $Mage::getModel ( 'postpay/cart' )->load ( $this->getRequest ()->getParam ( 'externalCartId' ) );
+		$cart = Mage::getModel ( 'postpay/cart' )->load ( $this->getRequest ()->getParam ( 'externalCartId' ) );
 		
-		if (! $cart->getId () && $cart->getOrderId () != null) {
+		if (! $cart || ! $cart->getId () || $cart->getOrderId () == null) {
 			return;
 		}
 		
 		$order = Mage::getModel ( 'sales/order' )->load ( $cart->getOrderId () );
 		/* @var $order Mage_Sales_Model_Order */
 		
-		if ($order && $order->getPayment ()->getMethodInstance ()->getCode () == 'postpay' && $order->getPayment ()->getMethodInstance ()->getInfoInstance ()->getData ( 'postpay_order_id' ) == $this->getRequest ()->getParam ( 'orderId' ) && $order->getPayment ()->getMethodInstance ()->getInfoInstance ()->getData ( 'postpay_notification_id' ) == $this->getRequest ()->getParam ( 'notificationId' )) {
+		if ($order && $order->getId () && $order->getPayment ()->getMethodInstance ()->getCode () == 'postpay' && $order->getPayment ()->getMethodInstance ()->getInfoInstance ()->getData ( 'postpay_order_id' ) == $this->getRequest ()->getParam ( 'orderId' ) && $order->getPayment ()->getMethodInstance ()->getInfoInstance ()->getData ( 'postpay_notification_id' ) == $this->getRequest ()->getParam ( 'notificationId' )) {
 			$status = $this->getRequest ()->getParam ( 'status', 'Pending' );
 			$order->getPayment ()->getMethodInstance ()->getInfoInstance ()->setData ( 'postpay_status', $status );
 			

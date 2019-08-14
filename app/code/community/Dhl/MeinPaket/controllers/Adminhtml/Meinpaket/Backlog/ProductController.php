@@ -1,12 +1,12 @@
 <?php
-class Dhl_MeinPaket_Adminhtml_Backlog_ProductController extends Mage_Adminhtml_Controller_Action {
+class Dhl_MeinPaket_Adminhtml_Meinpaket_Backlog_ProductController extends Mage_Adminhtml_Controller_Action {
 	protected function _initAction() {
 		$this->loadLayout ()->_setActiveMenu ( 'meinpaket/backlog' )->_addBreadcrumb ( Mage::helper ( 'meinpaket' )->__ ( 'Backlog' ), Mage::helper ( 'meinpaket' )->__ ( 'Backlog' ) );
 		return $this;
 	}
 	/**
 	 * (non-PHPdoc)
-	 * 
+	 *
 	 * @see Mage_Adminhtml_Controller_Action::_isAllowed()
 	 */
 	protected function _isAllowed() {
@@ -75,6 +75,33 @@ class Dhl_MeinPaket_Adminhtml_Backlog_ProductController extends Mage_Adminhtml_C
 	}
 	
 	/**
+	 */
+	public function massAddToBacklogAction() {
+		$productIds = $this->getRequest ()->getPost ( 'product', array () );
+		
+		/* @var $backlogHelper Dhl_MeinPaket_Helper_Backlog */
+		$backlogHelper = Mage::helper ( 'meinpaket/backlog' );
+		
+		$productsAddedToBacklog = 0;
+		
+		foreach ( $productIds as $id ) {
+			$count = $backlogHelper->createChildrenBacklog ( $id, '', true );
+			if ($count <= 0) {
+				$backlogHelper->createBacklog ( $id, $changes, true );
+			}
+			$productsAddedToBacklog ++;
+		}
+		
+		if ($productsAddedToBacklog > 0) {
+			Mage::getSingleton ( 'adminhtml/session' )->addSuccess ( Mage::helper ( 'meinpaket' )->__ ( 'Total %d of %d product(s) were added to backlog.', $productsAddedToBacklog, count ( $productIds ) ) );
+		} else {
+			Mage::getSingleton ( 'adminhtml/session' )->addError ( Mage::helper ( 'meinpaket' )->__ ( 'No product(s) added to backlog.' ) );
+		}
+		
+		$this->_redirect ( 'adminhtml/catalog_product/index' );
+	}
+	
+	/**
 	 * Get cronjobs from request.
 	 *
 	 * @return array of cronjobs
@@ -87,7 +114,11 @@ class Dhl_MeinPaket_Adminhtml_Backlog_ProductController extends Mage_Adminhtml_C
 			return array (
 					$cronjob 
 			);
+		} else if (in_array ( $cronjob, Dhl_MeinPaketCommon_Model_Cron::$CRONJOBS )) {
+			return array (
+					$cronjob 
+			);
 		}
-		return null;
+		return array ();
 	}
 }

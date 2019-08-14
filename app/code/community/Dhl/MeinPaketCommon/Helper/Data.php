@@ -8,18 +8,49 @@
  * @subpackage  Helper
  */
 class Dhl_MeinPaketCommon_Helper_Data extends Mage_Core_Helper_Abstract {
+	
+	/**
+	 * Configuration for store view.
+	 *
+	 * @var unknown
+	 */
 	const STORE_VIEW_CONFIG = 'meinpaket/store/view';
+	
+	/**
+	 * Cache for store
+	 *
+	 * @var Mage_Core_Model_Store
+	 */
 	private $_meinpaketStore = null;
+	
+	/**
+	 * Cache for root category
+	 *
+	 * @var unknown
+	 */
 	private $_meinpaketRootCategory = null;
+	
+	/**
+	 * Get extension version.
+	 */
 	public function getExtensionVersion() {
 		return ( string ) Mage::getConfig ()->getModuleConfig ( 'Dhl_MeinPaketCommon' )->version;
 	}
+	
+	/**
+	 *
+	 * @return Mage_Core_Model_Store
+	 */
 	public function getMeinPaketStore() {
 		if ($this->_meinpaketStore == null) {
 			$this->_meinpaketStore = Mage::app ()->getStore ( Mage::getStoreConfig ( self::STORE_VIEW_CONFIG ) );
 		}
 		return $this->_meinpaketStore;
 	}
+	
+	/**
+	 * Get StoreId
+	 */
 	public function getMeinPaketStoreId() {
 		$store = $this->getMeinPaketStore ();
 		if ($store == null) {
@@ -62,7 +93,7 @@ class Dhl_MeinPaketCommon_Helper_Data extends Mage_Core_Helper_Abstract {
 	
 	/**
 	 * Calculate price without tax
-	 * 
+	 *
 	 * @param float $price
 	 *        	with tax
 	 * @param float $tax
@@ -74,5 +105,25 @@ class Dhl_MeinPaketCommon_Helper_Data extends Mage_Core_Helper_Abstract {
 		}
 		
 		return $price / (1 + $tax);
+	}
+	
+	/**
+	 * Filter allowed html tags.
+	 *
+	 * @param unknown $input        	
+	 */
+	public function filterHTMLTags($input) {
+		$filter = new Zend_Filter_StripTags ( array (
+				'allowTags' => array (
+						'b',
+						'br',
+						'p',
+						'ul',
+						'ol',
+						'li',
+						'hr' 
+				) 
+		) );
+		return $filter->filter ( $input );
 	}
 }

@@ -8,7 +8,7 @@
  * @subpackage	Adminhtml
  * @version		$Id$
  */
-class Dhl_MeinPaket_Adminhtml_CategoryImportController extends Mage_Adminhtml_Controller_Action {
+class Dhl_MeinPaket_Adminhtml_Meinpaket_CategoryImportController extends Mage_Adminhtml_Controller_Action {
 	/**
 	 * Initializes the controller.
 	 *

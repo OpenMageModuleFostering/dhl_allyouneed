@@ -105,6 +105,26 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>0</show_in_store>
 						</use_available_special_price>
+						<configurable_product_fallback translate="label comment">
+							<label>Configurable product fallback</label>
+							<comment><![CDATA[Fallback to configurable product data if the simple product does not have data]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>40</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</configurable_product_fallback>
+						<include_configurable_product_images translate="label comment">
+							<label>Include configurable product images</label>
+							<comment><![CDATA[Include configurable product images when listing products]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</include_configurable_product_images>
 					</fields>
 				</product_attributes>
 				<customer translate="label">

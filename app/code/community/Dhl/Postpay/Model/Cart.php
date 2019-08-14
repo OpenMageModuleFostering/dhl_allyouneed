@@ -1,5 +1,9 @@
 <?php
 class Dhl_Postpay_Model_Cart extends Mage_Core_Model_Abstract {
+	const STATE_PENDING = 'PENDING';
+	const STATE_CREATEDORDER = 'CREATEDORDER';
+	const STATE_CANCELED = 'CANCELED';
+	
 	/**
 	 * (non-PHPdoc)
 	 *

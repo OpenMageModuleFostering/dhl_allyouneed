@@ -33,7 +33,7 @@ class Dhl_MeinPaket_Block_Adminhtml_Backlog_Product_Grid extends Mage_Adminhtml_
 				'type' => 'number',
 				'index' => 'product_id' 
 		) );
-
+		
 		$this->addColumn ( 'sku', array (
 				'header' => Mage::helper ( 'meinpaket' )->__ ( 'SKU' ),
 				'index' => 'sku' 
@@ -59,7 +59,7 @@ class Dhl_MeinPaket_Block_Adminhtml_Backlog_Product_Grid extends Mage_Adminhtml_
 		$this->getMassactionBlock ()->setFormFieldName ( 'backlogIds' );
 		$this->getMassactionBlock ()->addItem ( 'delete', array (
 				'label' => Mage::helper ( 'meinpaket' )->__ ( 'Delete' ),
-				'url' => $this->getUrl ( '*/*/massDelete', array () ),
+				'url' => $this->getUrl ( 'adminhtml/meinpaket_backlog_product/massDelete', array () ),
 				'confirm' => Mage::helper ( 'meinpaket' )->__ ( 'Are you sure?' ) 
 		) );
 		
@@ -71,7 +71,7 @@ class Dhl_MeinPaket_Block_Adminhtml_Backlog_Product_Grid extends Mage_Adminhtml_
 		) );
 	}
 	public function getGridUrl() {
-		return $this->getUrl ( '*/*/grid', array (
+		return $this->getUrl ( 'adminhtml/meinpaket_backlog_product/grid', array (
 				'_current' => true 
 		) );
 	}

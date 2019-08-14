@@ -3,7 +3,7 @@
 /**
  * 
  */
-class Dhl_MeinPaket_Adminhtml_BestPriceController extends Mage_Adminhtml_Controller_Action {
+class Dhl_MeinPaket_Adminhtml_Meinpaket_BestPriceController extends Mage_Adminhtml_Controller_Action {
 	protected function _initAction() {
 		$this->loadLayout ()->_setActiveMenu ( 'meinpaket/bestprice' )->_addBreadcrumb ( Mage::helper ( 'meinpaket' )->__ ( 'Best Price' ), Mage::helper ( 'meinpaket' )->__ ( 'Best Price' ) );
 		return $this;

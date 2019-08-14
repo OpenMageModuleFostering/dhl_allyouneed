@@ -11,10 +11,11 @@
 class Dhl_MeinPaket_Model_Entity_Attribute_Source_MeinPaketCategory extends Mage_Eav_Model_Entity_Attribute_Source_Abstract {
 	/**
 	 * Cache key for list
+	 * 
 	 * @var unknown
 	 */
 	const CACHE_KEY = 'meinpaket_categories';
-
+	
 	/**
 	 * Returns the MeinPaket categories.
 	 *
@@ -39,6 +40,7 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_MeinPaketCategory extends Mage
 				$currentParents [$cat->getCode ()] = array (
 						'label' => $cat->getName (),
 						'value' => $cat->getCode (),
+						'code' => $cat->getCode (),
 						'parent' => $cat->getParent () 
 				);
 			}

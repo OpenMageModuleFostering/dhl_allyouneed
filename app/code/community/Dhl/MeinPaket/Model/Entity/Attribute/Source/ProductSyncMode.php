@@ -8,7 +8,7 @@
  * @subpackage	Model_Entity_Attribute_Source
  * @version		$Id$
  */
-class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductSyncMode extends Mage_Eav_Model_Entity_Attribute_Abstract {
+class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductSyncMode extends Mage_Eav_Model_Entity_Attribute_Source_Abstract {
 	/**
 	 * Disabled.
 	 *
@@ -29,17 +29,10 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductSyncMode extends Mage_E
 	const COMPLETE = 2;
 	
 	/**
-	 * Options
-	 *
-	 * @var array
-	 */
-	protected $options;
-	
-	/**
 	 * Default constructor.
 	 */
 	public function __construct() {
-		$this->options = array (
+		$this->_options = array (
 				array (
 						'label' => Mage::helper ( 'meinpaket/data' )->__ ( 'Disabled' ),
 						'value' => self::DISABLED 
@@ -62,7 +55,7 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductSyncMode extends Mage_E
 	 * @return multitype:
 	 */
 	public function toOptionArray($addEmpty = true) {
-		return $this->options;
+		return $this->_options;
 	}
 	
 	/**
@@ -72,7 +65,7 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductSyncMode extends Mage_E
 	 * @return multitype:
 	 */
 	public function getAllOptions() {
-		return $this->options;
+		return $this->_options;
 	}
 	
 	/**
@@ -83,7 +76,7 @@ class Dhl_MeinPaket_Model_Entity_Attribute_Source_ProductSyncMode extends Mage_E
 	public function toSelectArray() {
 		$result = array ();
 		
-		foreach ( $this->options as $option ) {
+		foreach ( $this->_options as $option ) {
 			$result [$option ['value']] = $option ['label'];
 		}
 		

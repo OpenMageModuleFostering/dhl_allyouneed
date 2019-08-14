@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layout version="0.1.0">
-	<meinpaket_adminhtml_categoryimport_index>
+	<adminhtml_meinpaket_categoryimport_index>
 		<update handle="meinpaket_head_imports" />
 		<reference name="content">
 			<block type="meinpaket/adminhtml_categoryImport_index" name="meinpaket.adminhtml_categoryImport_index"
 				template="meinpaket/category/import/index.phtml" />
 		</reference>
-	</meinpaket_adminhtml_categoryimport_index>
+	</adminhtml_meinpaket_categoryimport_index>
 
-	<meinpaket_adminhtml_categoryimport_import>
+	<adminhtml_meinpaket_categoryimport_import>
 		<update handle="meinpaket_head_imports" />
 		<reference name="content">
 			<block type="meinpaket/adminhtml_categoryImport_index" name="meinpaket.adminhtml_categoryImport_import"
 				template="meinpaket/category/import/import.phtml" />
 		</reference>
-	</meinpaket_adminhtml_categoryimport_import>
+	</adminhtml_meinpaket_categoryimport_import>
 
-	<meinpaket_adminhtml_backlog_product_index>
+	<adminhtml_meinpaket_backlog_product_index>
 		<update handle="meinpaket_head_imports" />
 		<reference name="content">
 			<block type="meinpaket/adminhtml_backlog_product" name="meinpaket_admin_backlog_grid" />
 		</reference>
-	</meinpaket_adminhtml_backlog_product_index>
+	</adminhtml_meinpaket_backlog_product_index>
 
-	<meinpaket_adminhtml_matching_index>
+	<adminhtml_meinpaket_matching_index>
 		<update handle="meinpaket_head_imports" />
 		<block type="core/text_list" name="root" output="toHtml">
 			<block type="meinpaket/adminhtml_catalog_product_matching_result" name="catalog.product.matching.result"
 				template="meinpaket/catalog/product/matching/result.phtml" />
 		</block>
-	</meinpaket_adminhtml_matching_index>
+	</adminhtml_meinpaket_matching_index>
 
-	<meinpaket_adminhtml_bestprice_index translate="label" module="meinpaket">
+	<adminhtml_meinpaket_bestprice_index translate="label" module="meinpaket">
 		<update handle="meinpaket_head_imports" />
 		<reference name="content">
 			<block type="meinpaket/adminhtml_bestPrice" name="meinpaket_admin_bestPrice_grid" />
 		</reference>
-	</meinpaket_adminhtml_bestprice_index>
+	</adminhtml_meinpaket_bestprice_index>
 
 	<adminhtml_catalog_product_edit>
 		<update handle="meinpaket_head_imports" />

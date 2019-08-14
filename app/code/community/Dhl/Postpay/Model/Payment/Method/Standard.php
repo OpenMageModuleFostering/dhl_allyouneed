@@ -61,6 +61,7 @@ class Dhl_Postpay_Model_Payment_Method_Standard extends Mage_Payment_Model_Metho
 	 */
 	protected $_canUseForMultishipping = false;
 	
+	
 	/**
 	 * Can save credit card information for future processing?
 	 */

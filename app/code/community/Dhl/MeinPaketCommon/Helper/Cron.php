@@ -40,15 +40,19 @@ class Dhl_MeinPaketCommon_Helper_Cron extends Mage_Core_Helper_Abstract {
 		
 		foreach ( $cronjobs as $code ) {
 			try {
+				$res = null;
+				
 				switch ($code) {
-					case Dhl_MeinPaketCommon_Model_Cron::SYNC_CATALOG :
-						$res = Mage::getSingleton ( 'meinpaket/service_product_export' )->exportProducts ();
-						break;
 					case Dhl_MeinPaketCommon_Model_Cron::SYNC_ORDERS :
 						$res = Mage::getSingleton ( 'meinpaketcommon/service_order_importService' )->importOrders ();
 						break;
 					case Dhl_MeinPaketCommon_Model_Cron::SYNC_ASYNC :
 						$res = Mage::getSingleton ( 'meinpaketcommon/service_async' )->process ();
+						break;
+					default :
+						Mage::dispatchEvent ( ’dhl_meinpaket_run_cronjob’, array (
+								$code 
+						) );
 						break;
 				}
 				
