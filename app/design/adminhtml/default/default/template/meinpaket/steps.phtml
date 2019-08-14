@@ -1,0 +1,15 @@
+
+<ul class="allyouneed-steps">    
+<?php
+$i = 0;
+foreach ( $this->steps as $k => $v ) :
+	$i ++;
+	$class = "nr" . $i;
+	if ($k == $this->activeStep) {
+		$class .= " active";
+	}
+	?>
+	<li class="<?php echo $class ?>"><p><?php echo $v ?></p></li>
+
+<?php endforeach ?>
+</ul>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Dhl_Postpay>
+			<active>true</active>
+			<codePool>community</codePool>
+			<depends>
+				<Mage_Payment />
+				<Dhl_MeinPaketCommon />
+			</depends>
+		</Dhl_Postpay>
+	</modules>
+</config>

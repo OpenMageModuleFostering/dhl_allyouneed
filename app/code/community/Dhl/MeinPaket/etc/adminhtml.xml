@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<config>
+	<menu>
+		<meinpaket>
+			<title>Allyouneed / Postpay</title>
+			<children>
+				<meinpaket_backlog translate="title" module="meinpaket">
+					<title>Synchronisation</title>
+					<action>meinpaket/adminhtml_backlog_product</action>
+					<depends>
+						<config>meinpaket/credentials/active</config>
+					</depends>
+				</meinpaket_backlog>
+				<meinpaket_categoryimport translate="title" module="meinpaket">
+					<title>import categories</title>
+					<action>meinpaket/adminhtml_categoryImport</action>
+					<depends>
+						<config>meinpaket/credentials/active</config>
+					</depends>
+				</meinpaket_categoryimport>
+				<meinpaket_bestprice translate="title" module="meinpaket">
+					<title>best prices</title>
+					<action>meinpaket/adminhtml_bestPrice</action>
+					<depends>
+						<config>meinpaket/credentials/active</config>
+					</depends>
+				</meinpaket_bestprice>
+			</children>
+			<sort_order>90</sort_order>
+			<class>meinpaket</class>
+		</meinpaket>
+	</menu>
+	<acl>
+		<resources>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<meinpaket translate="title" module="meinpaket">
+										<title>Allyouneed / Postpay</title>
+										<sort_order>100</sort_order>
+									</meinpaket>
+								</children>
+							</config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

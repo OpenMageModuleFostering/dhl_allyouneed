@@ -1,0 +1,20 @@
+<ul class="tabs">
+	<li>
+		<dl>
+<?php
+// Mage::helper/'core/string')
+foreach ( $this->menuItems as $action => $item ) :
+	$class = "";
+	if ($action == $this->activeItem) {
+		$class = "active";
+	}
+	?>
+			<dd>
+				<a class="<?php echo $class ?>"
+					href="<?php echo $this->getUrl($action) ?>"> <span class="active"><?php echo $item ?></span>
+				</a>
+			</dd>
+<?php endforeach ?>
+		</dl>
+	</li>
+</ul>

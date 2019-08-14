@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+	<meinpaket_head_imports>
+		<reference name="head">
+			<action method="addItem">
+				<type>skin_js</type>
+				<name>meinpaketcommon/module.js</name>
+				<params />
+			</action>
+			<action method="addItem">
+				<type>skin_css</type>
+				<name>meinpaketcommon/module.css</name>
+				<params />
+			</action>
+		</reference>
+	</meinpaket_head_imports>
+
+	<meinpaketcommon_adminhtml_log_index translate="label"
+		module="meinpaketcommon">
+		<update handle="meinpaket_head_imports" />
+		<reference name="content">
+			<block type="meinpaketcommon/adminhtml_log" name="meinpaketcommon_admin_log_grid" />
+		</reference>
+	</meinpaketcommon_adminhtml_log_index>
+
+	<meinpaketcommon_adminhtml_async_index translate="label"
+		module="meinpaketcommon">
+		<update handle="meinpaket_head_imports" />
+		<reference name="content">
+			<block type="meinpaketcommon/adminhtml_async" name="meinpaket_admin_async_grid" />
+		</reference>
+	</meinpaketcommon_adminhtml_async_index>
+
+	<adminhtml_system_config_edit>
+		<update handle="meinpaket_head_imports" />
+		<reference name="head"></reference>
+	</adminhtml_system_config_edit>
+</layout>

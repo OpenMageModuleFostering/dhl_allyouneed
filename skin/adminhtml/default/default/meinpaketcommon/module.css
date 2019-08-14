@@ -1,0 +1,55 @@
+@CHARSET "UTF-8";
+
+h3.allyouneed {}
+div#allyouneed-description { background: url('images/ayn_ger_tuete_produkte_aussen.jpg') no-repeat 20px 5px; padding: 5px 150px 20px 240px; min-height: 150px; position:relative; }
+div#allyouneed-description p {text-align: justify;}
+div#allyouneed-description b {color: #515151;}
+div#allyouneed-description i {color: #646B70;}
+div.allyouneed-content {padding: 10px; background: url('images/shadowtopbg.png') repeat-x #E5E5E5; border: 1px solid #FFCC00}
+
+div.allyouneed-content form label {margin-right: 10px; }
+
+#disabled-till-export {}
+
+#allyouneed_form {
+  position: absolute;
+  right: 30px;
+  bottom: 10px;
+}
+
+ul.allyouneed-steps {margin: 10px 0 0 20px; clear: both}
+li.nr1 {background: url('images/1.png') no-repeat 0px 0px }
+li.nr2 {background: url('images/2.png') no-repeat 0px 0px }
+li.nr3 {background: url('images/3.png') no-repeat 0px 0px }
+ul.allyouneed-steps li { background-color: #6A6B6B; width: 32%; display: block; border: 1px solid #595959; float: left; padding: 8px 0px 8px 0px; margin: 5px 1% 15px 0;}
+ul.allyouneed-steps li p {margin: 4px 0 4px 80px; font-weight: bold}
+ul.allyouneed-steps li.active { background-color: #FFCC00; border-style: solid; border-color: #ddbb00;}
+
+div.scrollablebox {height: 300px; overflow: auto; /*border: 1px solid #eee; padding: 5px;*/}
+
+#allyouneed-results {padding-left:20px;}
+th.col-product {min-width: 200px}
+table#allyouneed-results td.row-subheader { background-color: #FFCC00; color: #2F2F2F; font-weight: bold; }
+table#allyouneed-results td.row-subheader span.resultCount { color: #646B70; font-size: 80%; }
+table#allyouneed-results td.row-num { width: 1px; text-align: right !important; }
+table#allyouneed-results th.header-center { text-align: center !important; }
+.cc {clear: both}
+
+.allyouneed-waitbox { float: none; display: block; clear: both; padding: 10px; text-align: center; }
+.allyouneed-waitbox small { position: relative; top: -8px; }
+
+.columns #edit_form .form-list td.value { width: auto; }
+#edit_form .form-list td.value select { width: 280px; }
+
+.section-config.allyouneed > :first-child  {
+  background-color: #fc0 !important;
+}
+
+.section-config.allyouneed > :first-child > a {
+  color: #D40511 !important;
+}
+
+.section-config.allyouneed:first-child {
+  padding-top: 170px;
+  background:url('http://portal.allyouneed.com/fileadmin/media/magento_admin.jpg') no-repeat;
+}

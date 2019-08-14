@@ -1,0 +1,20 @@
+<p class="postpay-button">
+<?php $shortcutHtmlId = $this->getShortcutHtmlId()?>
+<?php if ($this->isOrPositionBefore()): ?>
+	<span class="paypal-or"><?php echo $this->__('-OR-');?></span>
+<?php endif; ?>
+<a data-action="checkout-form-submit"
+		href="<?php echo $this->getCheckoutUrl()?>"> <img
+		src="<?php echo $this->getImageUrl()?>"
+		alt="<?php echo Mage::helper('postpay')->__('Checkout with Postpay');?>"
+		title="<?php echo Mage::helper('postpay')->__('Checkout with Postpay');?>" />
+	</a>
+<?php if ($this->isOrPositionAfter()): ?>
+
+
+<li>
+	<p class="postpay-logo">
+		<span class="postpay-or"><?php echo $this->__('-OR-');?></span>
+	</p>
+</li>
+<?php endif; ?>

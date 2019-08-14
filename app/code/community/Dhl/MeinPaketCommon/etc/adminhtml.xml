@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+	<menu>
+		<meinpaket>
+			<title>Allyouneed</title>
+			<children>
+				<meinpaket_log translate="title" module="meinpaketcommon">
+					<title>Log</title>
+					<action>meinpaketcommon/adminhtml_log</action>
+				</meinpaket_log>
+				<meinpaket_async translate="title" module="meinpaketcommon">
+					<title>Async</title>
+					<action>meinpaketcommon/adminhtml_async</action>
+				</meinpaket_async>
+			</children>
+			<sort_order>90</sort_order>
+			<class>meinpaket</class>
+		</meinpaket>
+	</menu>
+	<acl>
+		<resources>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<meinpaket translate="title" module="meinpaketcommon">
+										<title>Allyouneed</title>
+										<sort_order>100</sort_order>
+									</meinpaket>
+								</children>
+							</config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

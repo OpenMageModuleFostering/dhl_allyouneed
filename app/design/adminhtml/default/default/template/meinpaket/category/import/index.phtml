@@ -1,0 +1,49 @@
+
+<div class="content-header">
+	<table class="grid-header">
+		<tr>
+			<td><h3 class="icon-head meinpaket"><?php echo __('Import Categories'); ?></h3></td>
+			<td class="a-right">
+				<!-- <button onclick="setLocationWithWait('<?php echo $this->getUrl('meinpaket/adminhtml_categoryImport/import/') ?>')" class="scalable" type="button"><span><?php echo $this->__('import categories'); ?></span></button> -->
+				<button onclick="startProcessing()" class="scalable" type="button"
+					id="startButton">
+					<span><?php echo $this->__('import categories'); ?></span>
+				</button>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="dashboard-container allyouneed-content">
+
+	<ul class="allyouneed-steps">
+		<li class="active nr1"><p><?php echo __('Overview'); ?></p></li>
+		<li class="nr2"><p><?php echo __('Import'); ?></p></li>
+		<li class="nr3"><p><?php echo __('Result'); ?></p></li>
+	</ul>
+	<div class="cc">
+		<!--  -->
+	</div>
+
+	<div id="allyouneed-description">
+		<p><?php echo __('Textual introduction into category import goes here...'); ?></p>
+
+		<form id="allyouneed_form" name="allyouneed_form" method="get"
+			action="<?php echo $this->getUrl('meinpaket/adminhtml_categoryImport/import/') ?>">
+			<fieldset>
+				<button onclick="startProcessing()" class="scalable" type="button"
+					id="startButton">
+					<span><?php echo $this->__('import categories'); ?></span>
+				</button>
+			</fieldset>
+		</form>
+	</div>
+
+	<div id="disabled-till-export" class="allyouneed-waitbox"
+		style="display: none">
+		<img
+			src="<?php echo $this->getSkinUrl('meinpaketcommon/images/loader.gif')?>" /><br />
+		<small><?php echo $this->__('please wait'); ?></small>
+	</div>
+
+</div>
+

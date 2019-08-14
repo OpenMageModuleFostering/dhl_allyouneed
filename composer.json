@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/DHL_Allyouneed",
+    "type": "magento-module",
+    "license": "--",
+    "homepage": "",
+    "description": "Allyouneed connector",
+    "authors": [
+    {
+        "name": "DHL Vertriebs GmbH",
+        "email": "support@meinpaket.de"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

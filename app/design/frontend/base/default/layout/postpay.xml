@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+	<checkout_cart_index>
+		<reference name="checkout.cart.top_methods">
+			<block type="postpay/checkout" name="checkout.cart.methods.postpay.top" before="-"
+				template="postpay/checkout.phtml">
+				<action method="setShowOrPosition">
+					<value>after</value>
+				</action>
+			</block>
+		</reference>
+		<reference name="checkout.cart.methods">
+			<block type="postpay/checkout" name="checkout.cart.methods.postpay.bottom" before="-"
+				template="postpay/checkout.phtml">
+				<action method="setShowOrPosition">
+					<value>after</value>
+				</action>
+			</block>
+		</reference>
+	</checkout_cart_index>
+</layout>

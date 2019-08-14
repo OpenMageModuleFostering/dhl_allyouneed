@@ -1,0 +1,58 @@
+<?php
+/**
+ * Suggestion response tab.
+ */
+?>
+
+<div class="entry-edit">
+	<div class="entry-edit-head">
+		<h4 class="icon-head head-edit-form fieldset-legend">Results</h4>
+		<div class="form-buttons"></div>
+	</div>
+	<div class="fieldset fieldset-wide" id="group_fields78">
+<?php if ($this->getSuggestions() != null && count($this->getSuggestions()->getProductData())): ?>
+		<div class="hor-scroll">
+			<div class="grid">
+				<table cellspacing="0" class="data border" width="100%">
+					<colgroup>
+						<col>
+						<col>
+						<col>
+						<col>
+						<col width="70">
+					</colgroup>
+					<thead>
+						<tr class="headings">
+							<th><?php echo $this->__('Name');?></th>
+							<th><?php echo $this->__('Manufacturer');?></th>
+							<th><?php echo $this->__('Short Description');?></th>
+							<th><?php echo $this->__('Marketplace Category');?></th>
+							<th class="last"><?php echo $this->__('Apply');?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($this->getSuggestions()->getProductData() as $suggestion):?>
+						<tr class="preview">
+							<td class="cell-name"><?php echo $suggestion->getName(); ?></td>
+							<td class="cell-manufacturer-name"><?php echo $suggestion->getManufacturerName(); ?></td>
+							<td class="cell-short-description"><?php echo $suggestion->getShortDescription(); ?></td>
+							<td class="cell-category"><?php echo Mage::getModel('meinpaket/category')->load($suggestion->getMarketplaceCategory(), 'code')->getName(); ?> (<?php echo $suggestion->getMarketplaceCategory(); ?>)</td>
+							<td class="cell-assign a-center last">
+								<?php if (true || strlen($suggestion->getMarketplaceCategory())):?>
+									<a
+								href="<?php echo $this->getUrl('meinpaket/adminhtml_matching/apply', array('id' => Mage::registry('current_product')->getId(), 'category' => $suggestion->getMarketplaceCategory())); ?>">
+								<?php echo $this->__('Apply'); ?>
+								</a>
+								<?php endif;?>
+							</td>
+						</tr>
+						<?php endforeach;?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+<?php else: ?>
+<?php echo $this->__('No results');?>
+<?php endif; ?>
+		</div>
+</div>

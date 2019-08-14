@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<config>
+	<sections>
+		<meinpaket module="core" translate="label">
+			<label>DHL Allyouneed / Postpay</label>
+			<tab>general</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>1000</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<class>allyouneed</class>
+			<groups>
+				<store>
+					<label>Store</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>2</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<frontend_class>allyouneed</frontend_class>
+					<fields translate="label">
+						<view translate="label">
+							<label>Store View</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_store</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</view>
+					</fields>
+				</store>
+				<credentials translate="label">
+					<label>Credentials</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>1</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>0</show_in_store>
+					<frontend_class>allyouneed</frontend_class>
+					<fields>
+						<username translate="label comment">
+							<label>Username</label>
+							<comment><![CDATA[This is the username that was given to you by DHL, mostly your email address.]]></comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</username>
+						<password translate="label comment">
+							<label>Password</label>
+							<comment><![CDATA[This is the password that was given to you by DHL.]]></comment>
+							<frontend_type>password</frontend_type>
+							<backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</password>
+					</fields>
+				</credentials>
+				<endpoint translate="label">
+					<label>Remote system</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>3</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<frontend_class>allyouneed</frontend_class>
+					<fields>
+						<https translate="label comment">
+							<label>Use HTTPs</label>
+							<comment><![CDATA[Use https:// to connect to DHL Allyouneed]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</https>
+						<sandbox translate="label comment">
+							<label>Use Sandbox</label>
+							<comment><![CDATA[Use DHL Allyouneed sandbox]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>11</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</sandbox>
+						<proxy translate="label comment">
+							<label>Use Proxy</label>
+							<comment><![CDATA[Use proxy to connect to DHL Allyouneed]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</proxy>
+						<proxy_host translate="label comment">
+							<label>Proxy Host</label>
+							<comment><![CDATA[Used proxy host to connect to DHL Allyouneed. Disabled when empty]]></comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>21</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+							<depends>
+								<proxy>1</proxy>
+							</depends>
+						</proxy_host>
+						<proxy_port translate="label comment">
+							<label>Proxy Port</label>
+							<comment><![CDATA[Use proxy port to connect to DHL Allyouneed. Disabled when empty]]></comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>22</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+							<depends>
+								<proxy>1</proxy>
+							</depends>
+						</proxy_port>
+					</fields>
+				</endpoint>
+				<shipment translate="label">
+					<label>Shipment</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>15</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<frontend_class>allyouneed</frontend_class>
+					<fields>
+						<default_shipment_method translate="label comment">
+							<label>Default Shipment Method</label>
+							<comment><![CDATA[Shipment method which is used for order import and POSTPAY.]]></comment>
+							<frontend_type>select</frontend_type>
+							<type>text</type>
+							<source_model>meinpaketcommon/entity_attribute_source_carrier</source_model>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</default_shipment_method>
+					</fields>
+				</shipment>
+				<customer translate="label">
+					<label>Customer</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>50</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>0</show_in_store>
+					<frontend_class>allyouneed</frontend_class>
+					<fields>
+						<default_email translate="label comment">
+							<label>Default customer email</label>
+							<comment><![CDATA[This eMail address is used as the default one for orders that do not include one.]]></comment>
+							<frontend_type>text</frontend_type>
+							<validate>validate-email</validate>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</default_email>
+					</fields>
+				</customer>
+				<cron translate="label">
+					<label>Cron</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>100</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>0</show_in_store>
+					<frontend_class>allyouneed</frontend_class>
+					<fields>
+						<async translate="label comment">
+							<label>Async Request</label>
+							<comment><![CDATA[Async request check interval]]></comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</async>
+						<order translate="label comment">
+							<label>Order Import</label>
+							<comment><![CDATA[Order import interval.]]></comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>30</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</order>
+						<cleanup translate="label comment">
+							<label>Cleanup Interval</label>
+							<comment><![CDATA[Interval to run cleanups.]]></comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</cleanup>
+					</fields>
+				</cron>
+				<advanced translate="label">
+					<label>Advanced</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>150</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>0</show_in_store>
+					<frontend_class>allyouneed</frontend_class>
+					<fields>
+						<cycle_product_count translate="label comment">
+							<label>Cycle product count</label>
+							<comment><![CDATA[Count of products transfered during a single cycle]]></comment>
+							<frontend_type>text</frontend_type>
+							<validate>validate-digits</validate>
+							<sort_order>15</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</cycle_product_count>
+					</fields>
+				</advanced>
+			</groups>
+		</meinpaket>
+		<carriers>
+			<groups>
+				<allyouneed translate="label" module="meinpaket">
+					<label>Allyouneed Versand Modul</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>20</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<active translate="label">
+							<label>Enabled</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</active>
+					</fields>
+				</allyouneed>
+			</groups>
+		</carriers>
+	</sections>
+</config>
+

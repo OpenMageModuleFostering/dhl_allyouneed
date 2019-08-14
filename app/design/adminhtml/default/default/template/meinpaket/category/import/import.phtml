@@ -1,0 +1,121 @@
+<?php
+/* @var $this Dhl_MeinPaket_Block_Adminhtml_CategoryImport_Import */	
+	/* @var $result Dhl_MeinPaket_Model_Service_MarketplaceCategoryImport_Result */
+	$result = $this->getResult ();
+?>
+<div class="content-header">
+	<table class="grid-header">
+		<tr>
+			<td><h3 class="icon-head allyouneed"><?php echo __('Import Categories'); ?></h3></td>
+			<td class="a-right">
+				<button
+					onclick="setLocation('<?php echo $this->getUrl('meinpaket/adminhtml_categoryImport/index/') ?>')"
+					class="scalable back" type="button">
+					<span><?php echo $this->__('start again'); ?></span>
+				</button>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="dashboard-container allyouneed-content">
+	<ul class="allyouneed-steps">
+		<li class="nr1"><p><?php echo __('Overview'); ?></p></li>
+		<li class="nr2"><p><?php echo __('Import'); ?></p></li>
+		<li class="nr3 active"><p><?php echo __('Result'); ?></p></li>
+	</ul>
+	<div class="cc">
+		<!--  -->
+	</div>
+
+	<div id="allyouneed-results" class="scrollablebox grid entry-edit">
+	<?php if($result !== null && $result->getNewCategoriesCount() + $result->getDeletedCategoriesCount() + $result->getUpdatedCategoriesCount() > 0) : ?>
+		<table id="allyouneed-results">
+			<tbody>
+		
+		<?php /*** NEW CATEGORIES **********************************************/ ?>
+		<?php if($result->getNewCategoriesCount() > 0) : ?>
+			<tr>
+					<td colspan="4" class="row-subheader"><?php echo __('New categories'); ?> | <span
+						class="resultCount"><?php echo $result->getNewCategoriesCount().' '.__('total'); ?></span></td>
+				</tr>
+				<tr class="headings">
+					<th class="header-center">#</th>
+					<th class="col-product" colspan="2"><?php echo __('Category'); ?></th>
+					<th><?php echo __('Category Code'); ?></th>
+				</tr>
+			<?php
+			$newCategories = $result->getNewCategories ();
+			$currentIndex = 0;
+			$stripeClass = 'odd';
+			?>
+			<?php foreach($newCategories as $category) : ?>
+				<?php $stripeClass = ($stripeClass === 'even') ? 'odd' : 'even'; ?>
+				<tr class="<?php echo $stripeClass; ?>">
+					<td class="row-num"><?php echo ++$currentIndex; ?></td>
+					<td colspan="2"><?php echo $category->getName(); ?> </td>
+					<td><?php echo $category->getCode(); ?></td>
+				</tr>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		
+		<?php /*** UPDATED CATEGORIES ******************************************/ ?>
+		<?php if($result->getUpdatedCategoriesCount() > 0) : ?>
+			<tr>
+					<td colspan="4" class="row-subheader"><?php echo __('Updated categories'); ?> | <span
+						class="resultCount"><?php echo $result->getUpdatedCategoriesCount().' '.__('total'); ?></span></td>
+				</tr>
+				<tr class="headings">
+					<th class="header-center">#</th>
+					<th class="col-product" colspan="2"><?php echo __('Category'); ?></th>
+					<th><?php echo __('Category Code'); ?></th>
+				</tr>
+			<?php
+			$updatedCategories = $result->getUpdatedCategories ();
+			$currentIndex = 0;
+			$stripeClass = 'odd';
+			?>
+			<?php foreach($updatedCategories as $category) : ?>
+				<?php $stripeClass = ($stripeClass === 'even') ? 'odd' : 'even'; ?>
+				<tr class="<?php echo $stripeClass; ?>">
+					<td class="row-num"><?php echo ++$currentIndex; ?></td>
+					<td colspan="2"><?php echo $category->getName(); ?> </td>
+					<td><?php echo $category->getCode(); ?></td>
+				</tr>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		
+		<?php /*** DELETED CATEGORIES ******************************************/ ?>
+		<?php if($result->getDeletedCategoriesCount() > 0) : ?>
+			<tr>
+					<td colspan="4" class="row-subheader"><?php echo __('Deleted categories'); ?> | <span
+						class="resultCount"><?php echo $result->getDeletedCategoriesCount().' '.__('total'); ?></span></td>
+				</tr>
+				<tr class="headings">
+					<th class="header-center">#</th>
+					<th class="col-product" colspan="2"><?php echo __('Category'); ?></th>
+					<th><?php echo __('Category Code'); ?></th>
+					</tr>
+			<?php
+			$deletedCategories = $result->getDeletedCategories ();
+			$currentIndex = 0;
+			$stripeClass = 'odd';
+			?>
+			<?php foreach($deletedCategories as $category) : ?>
+				<?php $stripeClass = ($stripeClass === 'even') ? 'odd' : 'even'; ?>
+				<tr class="<?php echo $stripeClass; ?>">
+					<td class="row-num"><?php echo ++$currentIndex; ?></td>
+					<td colspan="2"><?php echo $category->getName(); ?> </td>
+					<td><?php echo $category->getCode(); ?></td>
+				</tr>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		</tbody>
+		</table>
+	<?php else : ?>
+		<div class="allyouneed-description">
+			<p><?php echo __('Marketplace category structure was up to date. There have been no changes.'); ?></p>
+		</div>
+	<?php endif; ?>
+	</div>
+</div>
+
